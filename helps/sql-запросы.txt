@@ -1,0 +1,3 @@
+SELECT * FROM `productcategory` WHERE `idproductcategory` = 1 
+or `idproductcategory` = 3
+or `idproductcategory` = 5
