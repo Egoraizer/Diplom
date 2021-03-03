@@ -2,55 +2,10 @@
     font-family: Arial;
 }
 
-.header__container {
-    background-color: white;
-    margin-top: 20px;
-
-}
-
-.header__content {
-    margin-left: 15px;
-    margin-right: 15px;
-    margin-bottom: 10px;
-    display: flex;
-}
-
-
-.header__search {
-    align-items: center;
-}
-
-.search__content {
-    margin-top: 15px;
-    display: flex;
-}
-
-.search__text input {
-    width: 500px;
-}
-.header__personal {
-    margin-top: 15px;
-    display: flex;
-}
-
-.header__cart, .header__lk {
-    margin-right: 50px;
-}
-.cart__logo, .lk__logo {
-     margin: 0 auto;
-     display: block;
-}
-
 .carousel-item {
     height: 400px;
 
 }
-
-.line {
-    box-shadow: 0 0 10px black; /* Параметры тени */
-    padding-bottom: 1px;
-}
-
 .main__category {
     left:0;
     width: 30%;

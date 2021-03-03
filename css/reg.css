@@ -1,0 +1,15 @@
+* {
+	 font-family: 'Roboto', sans-serif;
+}
+
+form {
+	background-color: #a43545;
+	padding: 25px 50px 25px 30px;
+	color: white;
+}
+
+input {
+	padding: 5px;
+	outline:none;
+	outline-offset: 0;
+}

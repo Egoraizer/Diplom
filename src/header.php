@@ -1,13 +1,16 @@
+<?php session_start(); ?>
+
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta charset="UTF-8">
+	  <meta charset="UTF-8">
     <title>Книжный дом</title>
-    <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
-    <script src="bootstrap/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+    <script src="/bootstrap/js/bootstrap.js"></script>
 </head>
-<body>ы
+<body>
 	<header>
         <div class="header__container">
            <div class="header__content d-flex justify-content-between">
