@@ -6,6 +6,8 @@
 <head>
 	  <meta charset="UTF-8">
     <title>Книжный дом</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/header.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     <script src="/bootstrap/js/bootstrap.js"></script>
@@ -25,7 +27,7 @@
               <div class="search__content">
                 <form action="/index.php" method="GET">
                      <div class="input-group" style="width:500px">
-                          <input type="text" class="form-control" placeholder="Поиск книги..." name="q">
+                          <input type="text input-group" class="form-control" placeholder="Поиск книги..." name="q">
                           <button class="btn btn-danger" type="submit"><img src="/img/1.png" alt="" width="35px" height="35px"></button>
                       </div>
                 </form>
