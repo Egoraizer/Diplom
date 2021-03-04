@@ -75,7 +75,12 @@
 				  		<strong>Ошибка!</strong> Пароли не совпадают
 				  		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 					</div>
-				<? break;?>		
+				<? break;?>	
+
+				<? else:
+					$query_new_user = $conn->query("INSERT INTO `users` (`email`, `login`, `password`) VALUES ('$useremail', '$userlogin', '$userpassword')");
+					header('Location: index.php');
+					exit;?>	
 
 			<? endif; 	endwhile;?>
 
