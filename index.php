@@ -14,7 +14,7 @@
 </head>
 
 <body>
-  <?php require_once 'src/header.php'?>
+  <?php require_once './src/header.php'?>
 
     <div class="news__carousel">
         <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
@@ -38,10 +38,10 @@
         <div class="category__content">
           <h1 class="text-center">Категории</h1>
           <?php 
-            $conn = mysqli_connect('localhost', 'root', '', 'bookhousebase');
-            $q = $conn->query("SELECT * FROM productcategory");
-            while($row = $q->fetch_assoc()) { ?>
-              <div class="category__filter-item">
+            require_once './src/db.php'; connect_to_db();
+            $query_caterogy = $conn->query("SELECT * FROM productcategory");
+            while($row = $query_caterogy->fetch_assoc()) { ?>
+              <div class="category__filter-item"> 
                 <label class="filter__checkbox">
 
                   <input type="checkbox" name="" data-idprod="<? echo $row['idproductcategory']?>">
