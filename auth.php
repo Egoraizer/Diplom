@@ -1,4 +1,4 @@
-<?php session_start();  require_once './src/db.php'; connect_to_db();  ?>
+<?php session_start();  require_once './src/db.php'; connect_to_db(); ob_start();  ?>
 
 <!DOCTYPE html>
 <html>
@@ -8,7 +8,7 @@
 	<meta charset="UTF-8">
 	<link rel="preconnect" href="https://fonts.gstatic.com">
 	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="/css/auth.css">
+	<link rel="stylesheet" href="/css/regauth.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     <script src="/bootstrap/js/bootstrap.js"></script>
 </head>
@@ -52,6 +52,11 @@
 							<strong>Успешно!</strong> Вход выполнен.
 							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 							</div>
+						<? 					
+						$_SESSION['userlogin'] = $userlogin;
+						$_SESSION['useremail'] = $useremail;
+						header('Location: index.php')
+						?>
 						<?break;?>
 						<?elseif ($userpassword != $row['password']):?>
 							<div class="alert alert-danger alert-dismissible fade show" role="alert">

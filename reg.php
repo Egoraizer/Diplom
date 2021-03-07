@@ -9,7 +9,7 @@ ob_start();?>
 	<meta charset="UTF-8">
 	<link rel="preconnect" href="https://fonts.gstatic.com">
 	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="/css/reg.css">
+	<link rel="stylesheet" href="/css/regauth.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     <script src="/bootstrap/js/bootstrap.js"></script>
 </head>

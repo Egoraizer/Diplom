@@ -41,7 +41,7 @@ require_once './src/db.php'; connect_to_db(); ?>
                    <a href="/cart.php"><img src="/img/books.png" alt="" class="cart__logo"></a>
 
                 </div>
-                <div class="header__lk">
+                <div class="header__lk text-center">
                     <? if (!isset($_SESSION['userlogin'])): ?>
                         <div class="lk__info">Личный кабинет</div>
                         <a href="/lk.php"><img src="/img/door.png" alt="" class="lk__logo"></a>
