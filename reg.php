@@ -60,7 +60,7 @@ ob_start();?>
 
 				if ($row['login'] == $userlogin || $row['email'] == $useremail):?>
 					<div class="alert alert-warning alert-dismissible fade show" role="alert">
-				  		<strong>Ошибка!</strong> Данный логин или почта уже заняты. 
+				  		<strong>Ошибка!</strong> Логин или почта уже заняты.
 				  		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 					</div>
 				<? break;?>	
