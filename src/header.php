@@ -1,4 +1,5 @@
-<?php session_start(); ?>
+<?php session_start(); 
+require_once './src/db.php'; connect_to_db(); ?>
 
 <!DOCTYPE html>
 <html>
@@ -41,9 +42,13 @@
 
                 </div>
                 <div class="header__lk">
-                                    <!-- НЕ ЗАБУДЬ ПРО ОТКРЫТУЮ ДВЕРЬ-->
-                    <div class="lk__info">Личный кабинет</div>
-                    <a href="/lk.php"><img src="/img/door.png" alt="" class="lk__logo"></a>
+                    <? if (!isset($_SESSION['userlogin'])): ?>
+                        <div class="lk__info">Личный кабинет</div>
+                        <a href="/lk.php"><img src="/img/door.png" alt="" class="lk__logo"></a>
+                    <? else: ?>
+                        <div class="lk__info"><?= $_SESSION['userlogin'];?></div>
+                        <a href="/lk.php"><img src="/img/doorway.png" alt="" class="lk__logo"></a>
+                    <?endif;?>
                 </div>
             </div>
 

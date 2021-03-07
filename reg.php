@@ -1,4 +1,5 @@
-<?php session_start(); ?>
+<?php session_start(); 
+ob_start();?>
 
 <!DOCTYPE html>
 <html>
@@ -39,7 +40,7 @@
 		<h6 class="text-center">Вы уже зарегистрированы? <a href="/auth.php">Войдите</a></h6>
 	</form>
 	
-<?php 
+<?
 	require_once './src/db.php'; connect_to_db(); 
 
 	if($_REQUEST['go_reg']):
@@ -62,6 +63,7 @@
 				  		<strong>Ошибка!</strong> Данный логин или почта уже заняты. 
 				  		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 					</div>
+				<? break;?>	
 
 				<? elseif(strlen($userlogin) > 50 || strlen($useremail) > 50): ?>
 					<div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -79,8 +81,11 @@
 
 				<? else:
 					$query_new_user = $conn->query("INSERT INTO `users` (`email`, `login`, `password`) VALUES ('$useremail', '$userlogin', '$userpassword')");
-					header('Location: index.php');
-					exit;?>	
+					$_SESSION['userlogin'] = $userlogin;
+					$_SESSION['useremail'] = $useremail;
+					header('Location:lk.php');
+					ob_end_flush();
+					exit();?>	
 
 			<? endif; 	endwhile;?>
 
