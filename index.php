@@ -1,4 +1,4 @@
-<?php session_start(); ?>
+<?php session_start(); require_once './src/db.php'; connect_to_db(); ?>
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -37,22 +37,24 @@
       <div class="main__category">
         <div class="category__content">
           <h1 class="text-center">Категории</h1>
-          <?php 
-            require_once './src/db.php'; connect_to_db();
-            $query_caterogy = $conn->query("SELECT * FROM productcategory");
-            while($row = $query_caterogy->fetch_assoc()) { ?>
+          <?
+            
+            $query_caterogy = $conn->query("SELECT * FROM products");
+            while($row = $query_caterogy->fetch_assoc()): ?>
               <div class="category__filter-item"> 
                 <label class="filter__checkbox">
-
-                  <input type="checkbox" name="" data-idprod="<? echo $row['idproductcategory']?>">
-
+                  <input type="checkbox" name="" data-idprod="">
+                  <img src="<?echo $row['image']?>">
                 </label>
                 <?echo $row['name'];?>
               </div>
-            <?}?>
+            <?endwhile;?>
         </div>
       </div>
       <div class="main__products">
+        <? $query_products = $conn->query("SELECT * FROM products");
+           while ($row = $query_caterogy->fetch_assoc()) :?>
+           <? endwhile; ?>
       </div>
     </div>
   </main>
