@@ -1,5 +1,4 @@
-<?php session_start(); 
-ob_start();?>
+<?php session_start();  ob_start(); require_once './src/db.php'; connect_to_db(); ?>
 
 <!DOCTYPE html>
 <html>
@@ -41,7 +40,6 @@ ob_start();?>
 	</form>
 	
 <?
-	require_once './src/db.php'; connect_to_db(); 
 
 	if($_REQUEST['go_reg']):
 		$userlogin = trim(HtmlSpecialChars(strip_tags($_POST['userlogin'])));
@@ -80,7 +78,7 @@ ob_start();?>
 				<? break;?>	
 
 				<? else:
-					$query_new_user = $conn->query("INSERT INTO `users` (`email`, `login`, `password`) VALUES ('$useremail', '$userlogin', '$userpassword')");
+					$query_new_user = $conn->query("INSERT INTO `users` (`login`, `email`, `password`) VALUES ('$userlogin', '$useremail', '$userpassword')");
 					$_SESSION['userlogin'] = $userlogin;
 					$_SESSION['useremail'] = $useremail;
 					header('Location:lk.php');

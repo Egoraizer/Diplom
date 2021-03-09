@@ -1,4 +1,4 @@
-<?php session_start();  require_once './src/db.php'; connect_to_db(); ob_start();  ?>
+<?php session_start(); ob_start(); require_once './src/db.php'; connect_to_db();   ?>
 
 <!DOCTYPE html>
 <html>

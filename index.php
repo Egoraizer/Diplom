@@ -1,4 +1,4 @@
-<?php session_start(); require_once './src/db.php'; connect_to_db(); ?>
+<?php session_start(); require_once './src/db.php'; require_once './src/functions.php'; connect_to_db(); ?>
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -33,27 +33,24 @@
     </div>
 
   <main>
+  
     <div class="main__content d-flex justify-content-between">
       <div class="main__category">
         <div class="category__content">
           <h1 class="text-center">Категории</h1>
-          <?
-            
-            $query_caterogy = $conn->query("SELECT * FROM products");
-            while($row = $query_caterogy->fetch_assoc()): ?>
+
               <div class="category__filter-item"> 
                 <label class="filter__checkbox">
                   <input type="checkbox" name="" data-idprod="">
-                  <img src="<?echo $row['image']?>">
+                  <img src="">
                 </label>
-                <?echo $row['name'];?>
               </div>
-            <?endwhile;?>
         </div>
       </div>
       <div class="main__products">
-        <? $query_products = $conn->query("SELECT * FROM products");
-           while ($row = $query_caterogy->fetch_assoc()) :?>
+        <?$query_products = $conn->query("SELECT * FROM products");
+           while ($row = $query_products->fetch_assoc()) :?>
+           <img src="<?= $row['image']?>" alt="">
            <? endwhile; ?>
       </div>
     </div>
