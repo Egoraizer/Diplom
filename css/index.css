@@ -12,4 +12,17 @@
 }
 .main__products {
     width: 100%;
+    background-color: pink;
+}
+
+.products__cards {
+	margin-left: 50px;
+}
+
+.container__products {
+	margin: 50px;
+}
+
+.card__item {
+	background-color: black;
 }

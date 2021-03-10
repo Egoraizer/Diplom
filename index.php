@@ -35,6 +35,7 @@
   <main>
   
     <div class="main__content d-flex justify-content-between">
+
       <div class="main__category">
         <div class="category__content">
           <h1 class="text-center">Категории</h1>
@@ -47,11 +48,21 @@
               </div>
         </div>
       </div>
+
+
       <div class="main__products">
-        <?$query_products = $conn->query("SELECT * FROM products");
-           while ($row = $query_products->fetch_assoc()) :?>
-           <img src="<?= $row['image']?>" alt="">
-           <? endwhile; ?>
+        <div class="container__products">
+          <div class="products__cards overflow-hidden row row-cols-3">
+          <?$query_products = $conn->query("SELECT * FROM products");
+             while ($row = $query_products->fetch_assoc()) :?>
+
+                <div class="card__item col">
+                  <img src="<?= $row['image'];?>" height="300px" width="200px">
+                </div>
+             <? endwhile; ?>
+            </div>    
+        </div>
+        </div>
       </div>
     </div>
   </main>
