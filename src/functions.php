@@ -1,28 +1,28 @@
 <?php 
 
-  function can_upload($file) {
+  function can_upload_image($file) {
 
     if($file['name'] == '')
-		return 'Вы не выбрали файл.';
+		return 'Ошибка! Вы не выбрали файл.';
 	
 	elseif ($file['size'] == 0)
-		return 'Файл слишком большой.';
+		return 'Ошибка! Файл слишком большой.';
 
 	$getMime = explode('.', $file['name']);
 	$mime = strtolower(end($getMime));
 	$types = array('jpg', 'png', 'gif', 'bmp', 'jpeg');
 	
 	if(!in_array($mime, $types))
-		return 'Недопустимый тип файла.';
+		return 'Ошибка! Недопустимый тип файла.';
 
 	return true;
   }
   
-  function make_upload($file, $conn) {	
+  function make_upload_new_book($file, $conn, $title, $idauthor, $description, $idcategory, $price) {	
 
-	$name = mt_rand(0, 10000) . $file['name'];
-    $fullpath = 'productimg/' . $name;
+	$fullpath =  '../productimg/' . mt_rand(0, 10000) . $file['name'];
     echo $fullpath;
-    $query_upload_img = $conn->query("INSERT INTO `products` (`title`, `description`, `category`, `price`, `image`) VALUES ('2', '3', '4', '5', '$fullpath')");
-	copy($file['tmp_name'], '../productimg/' . $name); 
+    $query_upload_img = $conn->query("INSERT INTO `products` (`title`, `author`,`description`, `category`, `price`, `image`) VALUES ('$title', '$idauthor','$description', '$idcategory', '$price', '$fullpath')");
+	copy($file['tmp_name'], $fullpath); 	
+	
   }
