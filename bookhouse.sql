@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Мар 10 2021 г., 11:27
+-- Время создания: Мар 11 2021 г., 11:58
 -- Версия сервера: 10.3.22-MariaDB
 -- Версия PHP: 7.1.33
 
@@ -20,6 +20,24 @@ SET time_zone = "+00:00";
 --
 -- База данных: `bookhouse`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `author`
+--
+
+CREATE TABLE `author` (
+  `idauthor` int(11) NOT NULL,
+  `nameauthor` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Дамп данных таблицы `author`
+--
+
+INSERT INTO `author` (`idauthor`, `nameauthor`) VALUES
+(1, 'Стивен Кинг');
 
 -- --------------------------------------------------------
 
@@ -47,23 +65,14 @@ INSERT INTO `productcategory` (`idcategory`, `namecategory`) VALUES
 
 CREATE TABLE `products` (
   `idproduct` int(11) NOT NULL,
-  `title` varchar(25) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `author` int(11) NOT NULL,
   `description` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `category` int(11) NOT NULL,
   `price` int(5) NOT NULL,
   `image` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `rating` decimal(2,1) NOT NULL DEFAULT 0.0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Дамп данных таблицы `products`
---
-
-INSERT INTO `products` (`idproduct`, `title`, `description`, `category`, `price`, `image`, `rating`) VALUES
-(1, '2', '3', 4, 5, 'https://cdn.book24.ru/v2/ASE000000000852730/COVER/cover13d__w220.webp', '0.0'),
-(3, '2', '2', 2, 32, 'https://cdn.book24.ru/v2/ITD000000000986066/COVER/cover13d__w220.webp', '0.0'),
-(4, '2', '2', 2, 2, 'https://cdn.book24.ru/v2/ITD000000001090223/COVER/cover13d__w220.webp', '0.0'),
-(5, '2', '2', 22, 2, 'https://img-gorod.ru/28/347/2834749_detail.jpg', '0.0');
 
 -- --------------------------------------------------------
 
@@ -84,6 +93,12 @@ CREATE TABLE `users` (
 --
 
 --
+-- Индексы таблицы `author`
+--
+ALTER TABLE `author`
+  ADD PRIMARY KEY (`idauthor`);
+
+--
 -- Индексы таблицы `productcategory`
 --
 ALTER TABLE `productcategory`
@@ -93,7 +108,9 @@ ALTER TABLE `productcategory`
 -- Индексы таблицы `products`
 --
 ALTER TABLE `products`
-  ADD PRIMARY KEY (`idproduct`);
+  ADD PRIMARY KEY (`idproduct`),
+  ADD KEY `author` (`author`),
+  ADD KEY `category` (`category`);
 
 --
 -- Индексы таблицы `users`
@@ -106,6 +123,12 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT для таблицы `author`
+--
+ALTER TABLE `author`
+  MODIFY `idauthor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT для таблицы `productcategory`
 --
 ALTER TABLE `productcategory`
@@ -115,13 +138,24 @@ ALTER TABLE `productcategory`
 -- AUTO_INCREMENT для таблицы `products`
 --
 ALTER TABLE `products`
-  MODIFY `idproduct` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `idproduct` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Ограничения внешнего ключа сохраненных таблиц
+--
+
+--
+-- Ограничения внешнего ключа таблицы `products`
+--
+ALTER TABLE `products`
+  ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`author`) REFERENCES `author` (`idauthor`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `products_ibfk_2` FOREIGN KEY (`category`) REFERENCES `productcategory` (`idcategory`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
