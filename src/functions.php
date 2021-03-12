@@ -10,11 +10,10 @@
 
 	$getMime = explode('.', $file['name']);
 	$mime = strtolower(end($getMime));
-	$types = array('jpg', 'png', 'gif', 'bmp', 'jpeg');
+	$types = array('jpg', 'png', 'gif', 'bmp', 'jpeg', 'webp');
 	
 	if(!in_array($mime, $types))
 		return 'Ошибка! Недопустимый тип файла.';
-
 	return true;
   }
   
