@@ -12,7 +12,6 @@
 }
 .main__products {
     width: 100%;
-    background-color: pink;
 }
 
 .products__cards {
@@ -20,16 +19,21 @@
 }
 
 .container__products {
-	margin: 75px 0px 0px 75px;
+	margin: 40px 0px 0px 50px;
 }
 
-.card-shop {
-	padding-top: 50px;
-	padding-right: 15px;
-	margin: 0px 75px 40px 0px;
-	background-color: white;
+.card {
+	padding: 5px 0px 0px 0px;
+	margin: 0px 50px 15px 0px;
+	border: 0px !important;
 }
 
-.content__author {
-	color: black;
+.card-body {
+	padding: 0px !important;
+}
+
+
+
+.row > * { 
+	padding: 0px !important;
 }

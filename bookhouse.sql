@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Мар 12 2021 г., 11:40
+-- Время создания: Мар 15 2021 г., 11:59
 -- Версия сервера: 10.3.22-MariaDB
 -- Версия PHP: 7.1.33
 
@@ -79,10 +79,14 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`idproduct`, `title`, `author`, `description`, `category`, `price`, `image`, `rating`) VALUES
-(40, 'Будет Кровь', 1, '123', 1, 726, '../productimg/7251cover3d1__w337.webp', '0.0'),
+(40, 'Будет Кровьdgl;dfngkjfngsdfkjg', 1, '123', 1, 726, '../productimg/7251cover3d1__w337.webp', '0.0'),
 (41, 'Будет Кровь', 1, '123', 1, 726, '../productimg/7251cover3d1__w337.webp', '0.0'),
 (42, 'Будет Кровь', 1, '123', 1, 726, '../productimg/7251cover3d1__w337.webp', '0.0'),
-(43, 'Будет Кровь', 1, '123', 1, 726, '../productimg/7251cover3d1__w337.webp', '0.0');
+(43, 'Будет Кровь', 1, '123', 1, 726, '../productimg/7251cover3d1__w337.webp', '0.0'),
+(44, 'Будет Кровь', 1, '123', 1, 726, '../productimg/7251cover3d1__w337.webp', '0.0'),
+(45, 'Будет Кровь', 1, '123', 1, 726, '../productimg/7251cover3d1__w337.webp', '0.0'),
+(46, 'Будет Кровь', 1, '123', 1, 726, '../productimg/7251cover3d1__w337.webp', '0.0'),
+(47, 'Будет Кровь', 1, '123', 1, 726, '../productimg/7251cover3d1__w337.webp', '0.0');
 
 -- --------------------------------------------------------
 
@@ -148,7 +152,7 @@ ALTER TABLE `productcategory`
 -- AUTO_INCREMENT для таблицы `products`
 --
 ALTER TABLE `products`
-  MODIFY `idproduct` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `idproduct` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT для таблицы `users`

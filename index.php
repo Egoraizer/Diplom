@@ -51,21 +51,22 @@
 
       <div class="main__products">
         <div class="container__products">
-          <div class="products__cards overflow-hidden row row-cols-4">
+          <div class="products__cards row">
           <?$query_products = $conn->query("SELECT * FROM `products` INNER JOIN `productcategory` ON products.category = productcategory.idcategory INNER JOIN `author` ON products.author = author.idauthor ORDER BY products.idproduct LIMIT 9");
              while ($row = $query_products->fetch_assoc()) :?>
-              <div class="card-shop">
-                <div class="card__img col text-center">
-                  <img src="<?= $row['image'];?>" height="300px" width="200px">
-                </div>
-                <div class="card__content">
-                  <div class="content__title"><p><?= $row['price'];?> руб. <br>
-                  <?= $row['title']?></p></div>
+              <div class="card col-md-auto">
+                <div class="card-img-top mb-2"><img src="<?= $row['image']?>" style="width: 250px; width: 150px;"></div>
+                <div class="card-body">
 
-                  <div class="content__author"><?= $row['nameauthor']?></div>
+                  <div class="card-title">
+                   
+                    <?= $row['price']?> руб.<br> <?= $row['title'] ?> 
+                  </div>
+                  <div class="card-text" style="color: grey; text-overflow: hidden;"> <?= $row['nameauthor']?></div>
+                  <a href="" class="btn btn-success" style="width: 100%; ">В корзину</a>
                 </div>
-                <a href="./cart.php" class="btn btn-success" name="<?= $row['idproduct']?>">В корзину</a>
               </div>
+              
 
              <? endwhile; ?>
             </div>    
