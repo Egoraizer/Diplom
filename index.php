@@ -51,7 +51,7 @@
 
       <div class="main__products">
         <div class="container__products">
-          <div class="products__cards row   ">
+          <div class="products__cards row">
           <?$query_products = $conn->query("SELECT * FROM `products` INNER JOIN `productcategory` ON products.category = productcategory.idcategory INNER JOIN `author` ON products.author = author.idauthor ORDER BY products.idproduct LIMIT 9");
              while ($row = $query_products->fetch_assoc()) :?>
               <div class="card col-2">
@@ -71,19 +71,21 @@
                   <?= $row['nameauthor']?>  
                 </div>
 
-                <div class="card-btn text-center">  
-                  <a href="" class="btn btn-success" style="width: 100%; ">В корзину</a>
+                <div class="card-btn text-center"> 
+                  <form action="" method="POST">
+                    <button type="submit" name="goods_id" class="btn btn-success" style="width:100%;" value="<?= $row['idproduct']?>">В корзину</button>
+                  </form>
                 </div>      
               </div>
               
 
              <? endwhile; ?>
             </div>    
-        </div>
+          </div>
         </div>
       </div>
     </div>
-  </main>
+  </main> 
 <!--
     <p>
       <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Категории</a>
