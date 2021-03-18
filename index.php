@@ -1,4 +1,4 @@
-<?php session_start(); require_once './src/db.php'; require_once './src/functions.php'; connect_to_db(); ?>
+<?php session_start(); ob_start(); require_once './src/db.php'; require_once './src/functions.php'; connect_to_db(); ?>
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -52,7 +52,7 @@
       <div class="main__products">
         <div class="container__products">
           <div class="products__cards row">
-          <?$query_products = $conn->query("SELECT * FROM `products` INNER JOIN `productcategory` ON products.category = productcategory.idcategory INNER JOIN `author` ON products.author = author.idauthor ORDER BY products.idproduct LIMIT 9");
+          <?$query_products = $conn->query("SELECT * FROM `products` INNER JOIN `productcategory` ON products.category = productcategory.idcategory INNER JOIN `author` ON products.author = author.idauthor ORDER BY products.idproduct LIMIT 8");
              while ($row = $query_products->fetch_assoc()) :?>
               <div class="card col-2">
 
@@ -73,13 +73,35 @@
 
                 <div class="card-btn text-center"> 
                   <form action="" method="POST">
-                    <button type="submit" name="goods_id" class="btn btn-success" style="width:100%;" value="<?= $row['idproduct']?>">В корзину</button>
+                    <button type="submit" name="product" class="btn btn-success" style="width:100%;" value="<?= $row['idproduct']?>">В корзину</button>
                   </form>
+
                 </div>      
               </div>
               
 
              <? endwhile; ?>
+                        <? if ($_REQUEST['product']) {
+
+                              $product = $_POST['product'];
+
+                              if (empty($_COOKIE['cart'])) { 
+                                setcookie("cart", $product);
+                                echo "Печенье новое";
+                                var_dump($_COOKIE['cart']); 
+
+                              } else { 
+                                
+                                var_dump($_COOKIE['cart']);
+                              }
+                            }
+
+                            else {
+                              echo "Всего печенья: ". count($_COOKIE['cart']);
+                              echo "<br>Запроса нет. Печенье - ".$_COOKIE['cart'];
+                            } 
+                  
+                  ?>  
             </div>    
           </div>
         </div>
@@ -102,3 +124,5 @@
 -->
 </body>
 </html>
+
+<? ob_end_flush();?>

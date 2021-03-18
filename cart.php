@@ -1,1 +1,3 @@
-<?php echo $_SESSION['cart'];
+<?php session_start();
+
+$_SESSION['cart'] = array();
