@@ -91,7 +91,8 @@
                                 var_dump($_COOKIE['cart']); 
 
                               } else { 
-                                
+
+                                setcookie("cart[]", $product);
                                 var_dump($_COOKIE['cart']);
                               }
                             }

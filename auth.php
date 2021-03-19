@@ -38,7 +38,7 @@
 				<strong>Ошибка!</strong> Заполните все поля
 				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 				</div>
-			<?else: $query_users = $conn->query("SELECT `iduser`, `login`, `password` FROM `users` WHERE `login`= '$userlogin'");
+			<?else: $query_users = $conn->query("SELECT * FROM `users` WHERE `login`= '$userlogin'");
 				if($query_users->num_rows === 0): ?>
 					<div class="alert alert-warning alert-dismissible fade show" role="alert">
 					<strong> Ошибка! </strong> Такого пользователя не сущесвует

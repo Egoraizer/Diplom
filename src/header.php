@@ -1,4 +1,4 @@
-<?php session_start(); require_once './src/db.php'; connect_to_db(); ?>
+  <?php session_start(); require_once './src/db.php'; connect_to_db(); ?>
 
 <!DOCTYPE html>
 <html>
@@ -19,7 +19,7 @@
 
             <div class="header__logo">
                <div class="logo__icon">
-                   <img src="/img/logo.jpg" alt="">
+                   <img src="/img/logo.jpg" alt="" href="index.php" onclick="location.href='/index.php';"> 
                </div>
             </div>
 
@@ -47,6 +47,7 @@
                     <? else: ?>
                         <div class="lk__info"><?= $_SESSION['userlogin'];?></div>
                         <a href="/lk.php"><img src="/img/doorway.png" alt="" class="lk__logo"></a>
+                        <a class="btn btn-danger" href="/src/logout.php">Выход</a>  
                     <?endif;?>
                 </div>
             </div>

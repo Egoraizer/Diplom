@@ -78,7 +78,7 @@
 				<? break;?>	
 
 				<? else:
-					$query_new_user = $conn->query("INSERT INTO `users` (`login`, `email`, `password`) VALUES ('$userlogin', '$useremail', '$userpassword')");
+					$query_new_user = $conn->query("INSERT INTO `users` (`login`, `email`, `password`, `role`) VALUES ('$userlogin', '$useremail', '$userpassword', `user`)");
 					$_SESSION['userlogin'] = $userlogin;
 					$_SESSION['useremail'] = $useremail;
 					header('Location:lk.php');
