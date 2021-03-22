@@ -53,8 +53,8 @@
 							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 							</div>
 						<? 					
-						$_SESSION['userlogin'] = $userlogin;
-						$_SESSION['useremail'] = $useremail;
+						$_SESSION['user']['login'] = $userlogin;
+						$_SESSION['user']['email']  = $row['email'];
 						header('Location: index.php')
 						?>
 						<?break;?>

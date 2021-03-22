@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 4.9.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Мар 15 2021 г., 11:59
--- Версия сервера: 10.3.22-MariaDB
--- Версия PHP: 7.1.33
+-- Время создания: Мар 22 2021 г., 22:01
+-- Версия сервера: 8.0.15
+-- Версия PHP: 7.2.22
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -29,7 +30,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `author` (
   `idauthor` int(11) NOT NULL,
-  `nameauthor` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL
+  `nameauthor` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -47,7 +48,7 @@ INSERT INTO `author` (`idauthor`, `nameauthor`) VALUES
 
 CREATE TABLE `productcategory` (
   `idcategory` int(11) NOT NULL,
-  `namecategory` varchar(25) COLLATE utf8mb4_unicode_ci NOT NULL
+  `namecategory` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -65,13 +66,13 @@ INSERT INTO `productcategory` (`idcategory`, `namecategory`) VALUES
 
 CREATE TABLE `products` (
   `idproduct` int(11) NOT NULL,
-  `title` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `author` int(11) NOT NULL,
-  `description` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `category` int(11) NOT NULL,
   `price` int(5) NOT NULL,
-  `image` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `rating` decimal(2,1) NOT NULL DEFAULT 0.0
+  `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `rating` decimal(2,1) NOT NULL DEFAULT '0.0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -79,7 +80,7 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`idproduct`, `title`, `author`, `description`, `category`, `price`, `image`, `rating`) VALUES
-(40, 'Будет Кровьdgl;dfngkjfngsdfkjg', 1, '123', 1, 726, '../productimg/7251cover3d1__w337.webp', '0.0'),
+(40, 'Будет Кровьdgl;dfngkjfngsdfkjg', 1, '123', 1, 750, '../productimg/7251cover3d1__w337.webp', '0.0'),
 (41, 'Будет Кровь', 1, '123', 1, 726, '../productimg/7251cover3d1__w337.webp', '0.0'),
 (42, 'Будет Кровь', 1, '123', 1, 726, '../productimg/7251cover3d1__w337.webp', '0.0'),
 (43, 'Будет Кровь', 1, '123', 1, 726, '../productimg/7251cover3d1__w337.webp', '0.0'),
@@ -96,11 +97,18 @@ INSERT INTO `products` (`idproduct`, `title`, `author`, `description`, `category
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
-  `login` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `role` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'user'
+  `login` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'user'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Дамп данных таблицы `users`
+--
+
+INSERT INTO `users` (`id`, `login`, `email`, `password`, `role`) VALUES
+(2, 'Egoraizer12', 'eqop1232208@gmail.com', '123', 'user');
 
 --
 -- Индексы сохранённых таблиц
@@ -158,7 +166,7 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц

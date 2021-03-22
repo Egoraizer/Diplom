@@ -1,5 +1,5 @@
 <?php session_start();
-	  if (!isset($_SESSION['userlogin'])) header('Location: reg.php'); ?>
+	  if (!isset($_SESSION['user']['login'])) header('Location: reg.php'); ?>
 
 
 <!DOCTYPE html>

@@ -14,6 +14,52 @@
 </head>
 
 <body>
+<? 
+            
+            if ($_REQUEST['product']) {
+
+              $id = intval($_GET['product']);
+          
+              if (isset($_SESSION['user']['cart'][$id])) :
+                  $_SESSION['user']['cart'][$id]['amount']++;
+                  ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                      <strong>Успешно!</strong> Товар успешно добавлен в корзину.
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <script>document.location.replace('index.php');</script>
+              <? else :
+                  $sql_s = "SELECT * FROM products  WHERE `idproduct`={$id}";
+                  $query_s = $conn->query($sql_s);
+                  if (mysqli_num_rows($query_s) != 0) :
+                      $row_s = mysqli_fetch_array($query_s);
+          
+                      $_SESSION['user']['cart'][$row_s['idproduct']] = array(
+                          "amount" => 1,
+                          "price" => $row_s['price']
+                      );
+                      ?>
+                      <div class="alert alert-success alert-dismissible fade show" role="alert">
+                          <strong>Успешно!</strong> Товар успешно добавлен в корзину.
+                          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div>
+                      <script>document.location.replace('index.php');</script>
+                      <?
+                   else :
+                    ?> 
+                      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <strong>Произошла непредвиденная ошибка!</strong> Пожалуйста, попробуйте добавить товар в корзину еще раз.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <script>document.location.replace('index.php');</script>
+                  <?endif;
+                  endif;
+              }
+                  ?>  
+
+
+
+
   <?php require_once './src/header.php'?>
 
     <div class="news__carousel">
@@ -72,7 +118,7 @@
                 </div>
 
                 <div class="card-btn text-center"> 
-                  <form action="" method="POST">
+                  <form action="" method="get">
                     <button type="submit" name="product" class="btn btn-success" style="width:100%;" value="<?= $row['idproduct']?>">В корзину</button>
                   </form>
 
@@ -81,29 +127,9 @@
               
 
              <? endwhile; ?>
-                        <? if ($_REQUEST['product']) {
-
-                              $product = $_POST['product'];
-
-                              if (empty($_COOKIE['cart'])) { 
-                                setcookie("cart", $product);
-                                echo "Печенье новое";
-                                var_dump($_COOKIE['cart']); 
-
-                              } else { 
-
-                                setcookie("cart[]", $product);
-                                var_dump($_COOKIE['cart']);
-                              }
-                            }
-
-                            else {
-                              echo "Всего печенья: ". count($_COOKIE['cart']);
-                              echo "<br>Запроса нет. Печенье - ".$_COOKIE['cart'];
-                            } 
-                  
-                  ?>  
-            </div>    
+ 
+            </div> 
+  
           </div>
         </div>
       </div>
@@ -127,3 +153,11 @@
 </html>
 
 <? ob_end_flush();?>
+
+
+<? if (true) :?>
+
+ыащрывадлфыав
+<? else : ?>
+sdfsadfijsadhfiasdf
+<? endif; ?>

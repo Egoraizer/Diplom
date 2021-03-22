@@ -36,16 +36,23 @@
 
             <div class="header__personal">
                 <div class="header__cart">
-                   <div class="cart__info">В корзине товаров: 0 </div>
-                   <a href="/cart.php"><img src="/img/books.png" alt="" class="cart__logo"></a>
+                    <?if (isset($_SESSION['user']['cart'])) :
+                    $productamount = count($_SESSION['user']['cart']); ?>
+                    <div class="cart__info">В корзине товаров: <?= $productamount;?> </div>
+                    <a href="/cart.php"><img src="/img/books.png" alt="" class="cart__logo"></a>
 
+                    <?else:?>
+                    <div class="cart__info">Корзина пуста</div>
+                    <a href="/cart.php"><img src="/img/books.png" alt="" class="cart__logo"></a>
+                    <?endif;?>
                 </div>
+                    
                 <div class="header__lk text-center">
-                    <? if (!isset($_SESSION['userlogin'])): ?>
+                    <? if (!isset($_SESSION['user']['login'] )): ?>
                         <div class="lk__info">Личный кабинет</div>
                         <a href="/lk.php"><img src="/img/door.png" alt="" class="lk__logo"></a>
                     <? else: ?>
-                        <div class="lk__info"><?= $_SESSION['userlogin'];?></div>
+                        <div class="lk__info"><?= $_SESSION['user']['login'] ;?></div>
                         <a href="/lk.php"><img src="/img/doorway.png" alt="" class="lk__logo"></a>
                         <a class="btn btn-danger" href="/src/logout.php">Выход</a>  
                     <?endif;?>
