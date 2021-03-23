@@ -42,7 +42,7 @@
                     <a href="/cart.php"><img src="/img/books.png" alt="" class="cart__logo"></a>
 
                     <?else:?>
-                    <div class="cart__info">Корзина пуста</div>
+                    <div class="cart__info">Корзина</div>
                     <a href="/cart.php"><img src="/img/books.png" alt="" class="cart__logo"></a>
                     <?endif;?>
                 </div>
