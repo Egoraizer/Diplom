@@ -17,42 +17,20 @@
 	<div class="alert alert-warning alert-dismissible fade show" role="alert">
 		<strong>Корзина пуста.</strong>  Сперва добавьте товар в корзину и возвращайтесь!
 	</div>
-<? else : 
-        $query_products = $conn->query("SELECT * FROM products  WHERE `idproduct`={$id}"); ?>
-<? var_dump($_SESSION['user']);?>
-
+<? else : ?>
 	<div class="cart__page">
-		<div class="cart__content container">
-			<table class="table table-dark">
-	  <thead>
-	    <tr>
-	      <th scope="col"></th>
-	      <th scope="col">First</th>
-	      <th scope="col">Last</th>
-	      <th scope="col">Handle</th>
-	    </tr>
-	  </thead>
-	  <tbody>
-	    <tr>
-	      <th scope="row"><img src="../img/door.png"></th>
-	      <td>Mark</td>
-	      <td>Otto</td>
-	      <td>@mdo</td>
-	    </tr>
-	    <tr>
-	      <th scope="row">2</th>
-	      <td>Jacob</td>
-	      <td>Thornton</td>
-	      <td>@fat</td>
-	    </tr>
-	    <tr>
-	      <th scope="row">3</th>
-	      <td>Larry</td>
-	      <td>the Bird</td>
-	      <td>@twitter</td>
-	    </tr>
-	  </tbody>
-	</table>
+		<div class="cart__product">
+			<? $ids = array_keys($_SESSION['user']['cart']);
+	        $query_products = $conn->query("SELECT * FROM products WHERE idproduct IN (" . implode(',', $ids) . ") ORDER BY idproduct"); 
+	        while($row = $query_products->fetch_assoc()) :?>
+				<div class="product__content row">
+					<div class="product__image col">
+						<img src="<?= $row['image'] ?>" height="200px" width="130px">
+					</div>
+					<div class="product__body col"><?= $row['price'] ?></div>
+					<div class="product__info col">123</div>
+				</div>
+			<?endwhile;?>
 		</div>
 	</div>
 	
