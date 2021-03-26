@@ -1,6 +1,12 @@
-* {
-   font-family: 'Roboto', sans-serif;
+input {outline:none;}
+input:active  {outline:none;}
+
+ 
+
+*,:after,:before {
+    box-sizing:border-box
 }
+
 .modal {
   display: none;
   width: 100%;
@@ -15,15 +21,11 @@
     display: flex;
 }
 
-*,:after,:before {
-    box-sizing:border-box
-}
-
 .login_wrap {
     width: 100%;
     margin: auto;
-    max-width: 525px;
-    min-height: 800px;
+    max-width: 550px;
+    min-height: 930px;
     position: relative;
 }
 
@@ -33,9 +35,8 @@
     position: absolute;
     margin: 3rem 0;
     padding: 3rem 4rem;
-    background: #bb2d3b;
+    background: rgb(219, 123, 123);
     border-radius: 15px;
-    font-family: 'Roboto', sans-serif;
 }
 
 .login_tab .sign-in_tab,
@@ -69,7 +70,6 @@
 }
 
 .login_tab .tab {
-    font-size: 22px;
     margin-right: 15px;
     padding-bottom: 5px;
     margin: 0 15px 10px 0;
@@ -105,17 +105,16 @@
     border: none;
     padding: 15px 20px;
     border-radius: 25px;
-    background: rgba(255,255,255,.1);
+    background: rgb(255, 255, 255);
 }
 
 .login_form .group .label {
     padding: 0 1rem;
     color: #fff;
-    font-size: 12px;
 }
 
 .login_form .group .button {
-    background: #1e86d8;
+    background: #198754;
     cursor: pointer;
     color: #fff;
     text-transform: none;
@@ -136,13 +135,3 @@
 .login_tab .sign_up:checked + .tab + .login_form .sign-in_tab {
     transform: none;
 }
-
-/*.hr {
-    height:2px;
-    margin:60px 0 50px 0;
-    background:rgba(255,255,255,.2);
-}
-
-.foot-lnk {
-    text-align:center;
-}*/

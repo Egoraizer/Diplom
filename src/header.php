@@ -1,5 +1,97 @@
   <?php session_start(); require_once './src/db.php'; connect_to_db(); ?>
 
+  <?
+  
+  if($_REQUEST['reg']):
+		$userlogin = trim(HtmlSpecialChars(strip_tags($_POST['userlogin'])));
+		$useremail = trim(HtmlSpecialChars(strip_tags($_POST['useremail'])));
+		$userpassword = trim(HtmlSpecialChars(strip_tags($_POST['userpassword'])));
+		$userrpassword = trim(HtmlSpecialChars(strip_tags($_POST['userrpassword'])));
+
+		if (empty($userlogin) || empty($useremail) || empty($userpassword) || empty($userrpassword)): ?>
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+		  		<strong>Ошибка!</strong> Заполните все поля
+		  		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		<? else: 
+			$query_users = $conn->query("SELECT `login`, `email` FROM `users`");
+			while($row = $query_users->fetch_assoc()):
+
+				if ($row['login'] == $userlogin || $row['email'] == $useremail):?>
+					<div class="alert alert-warning alert-dismissible fade show" role="alert">
+				  		<strong>Ошибка!</strong> Логин или почта уже заняты.
+				  		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				<? break;?>	
+
+				<? elseif(strlen($userlogin) > 50 || strlen($useremail) > 50): ?>
+					<div class="alert alert-warning alert-dismissible fade show" role="alert">
+				  		<strong>Ошибка!</strong> Логин или почта слишком длинные. Напишите логин и почту менее 50 символов.
+				  		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				<? break;?>	
+
+				<? elseif($userrpassword !== $userpassword): ?>
+					<div class="alert alert-warning alert-dismissible fade show" role="alert">
+				  		<strong>Ошибка!</strong> Пароли не совпадают
+				  		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				<? break;?>	
+
+				<? else:
+					$query_new_user = $conn->query("INSERT INTO `users` (`login`, `email`, `password`) VALUES ('$userlogin', '$useremail', '$userpassword')");
+					$_SESSION['user']['login'] = $userlogin;
+					$_SESSION['user']['email'] = $useremail;
+					header('Location:index.php');
+					ob_end_flush();
+					exit();?>	
+
+			<? endif; 	endwhile;?>
+
+		<? endif; ?>
+
+	<? endif;?>
+
+  <? if($_REQUEST['enter']):
+		$userlogin = trim(HtmlSpecialChars(strip_tags($_POST['userlogin'])));
+		$userpassword = trim(HtmlSpecialChars(strip_tags($_POST['userpassword'])));
+			if (empty($userlogin) || empty($userpassword)): ?>
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong>Ошибка!</strong> Заполните все поля
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			<?else: $query_users = $conn->query("SELECT * FROM `users` WHERE `login`= '$userlogin'");
+				if($query_users->num_rows === 0): ?>
+					<div class="alert alert-warning alert-dismissible fade show" role="alert">
+					<strong> Ошибка! </strong> Такого пользователя не сущесвует
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+
+				<?else:
+					while($row = $query_users->fetch_assoc()):
+						if ($userpassword == $row['password']): ?>
+							<div class="alert alert-success alert-dismissible fade show" role="alert">
+							<strong>Успешно!</strong> Вход выполнен.
+							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+							</div>
+						<? 					
+						$_SESSION['user']['login'] = $userlogin;
+						$_SESSION['user']['email']  = $row['email'];
+						header('Location: index.php')
+						?>
+						<?break;?>
+						<?elseif ($userpassword != $row['password']):?>
+							<div class="alert alert-danger alert-dismissible fade show" role="alert">
+							<strong>Ошибка! </strong> Пароль введен не верно.
+							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+							</div>
+						<?break;?>
+						<?endif;?>
+					<?endwhile;?>
+					<? endif;?>	
+			<? endif;?>	
+		
+		<? endif;?>
 <!DOCTYPE html>
 <html>
 
@@ -12,7 +104,7 @@
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     <script src="/bootstrap/js/bootstrap.js"></script>
     <link rel="stylesheet" type="text/css" href="/css/modal.css">
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
 
 </head>
 <body>
@@ -66,9 +158,6 @@
         </div>
         <div class="line"></div>
 
-
-
-
         <div class="modal" id="modal">
           <div class="login_wrap">
             <div class="login_tab">
@@ -82,52 +171,51 @@
                 
                 <div class="sign-up_tab">
 
-                  <form method="post" action="doreg.php">
+                  <form method="post">
                     <div class="group">
                       <label class="label">Логин</label>
-                      <input type="text" name="login" class="input" placeholder="Ваш логин" required="true">
+                      <input type="text" name="userlogin" class="input" placeholder="Ваш Логин" required="true">
                     </div>
                     <div class="group">
                       <label class="label">Email адрес</label>
-                      <input type="text" name="email" class="input" placeholder="Ваш E-mail" required="true">
+                      <input type="text" name="useremail" class="input" placeholder="Ваш E-mail" required="true">
                     </div>
                     <div class="group">
                       <label class="label">Пароль</label>
-                      <input type="password" id="password" name="pass" class="input" required="true">
+                      <input type="password" name="userpassword" name="pass" class="input" required="true">
                     </div>
                     <div class="group">
                       <label class="label">Повторите пароль</label>
-                      <input type="password" id="passwordp" name="passp" class="input" required="true">
+                      <input type="password"  name="userrpassword" class="input" required="true">
                     </div>
                     <div class="group">
-                      <input type="submit" class="button" name="go_reg" value="Зарегистрироваться">
+                      <input type="submit" class="button" name="reg" value="Зарегистрироваться">
                     </div>
                   </form>
 
                 </div>
 
                 <div class="sign-in_tab">
-                  <form method="post" action="enter.php" id="login">
+                  <form method="post">
                     <div class="group">
                       <label class="label">Логин</label>
-                      <input type="text" name="login" class="input" placeholder="Логин">
+                      <input type="text" name="userlogin" class="input" placeholder="Логин" required="true">
                     </div>
                     <div class="group">
                       <label class="label">Пароль</label>
-                      <input type="password" name="pass" class="input" placeholder="Пароль">
+                      <input type="password" name="userpassword" class="input" placeholder="Пароль" required="true">
                     </div>
                     <div class="group">
-                      <input type="submit" class="button" name="go_enter" value="Войти">
+                      <input type="submit" class="button" name="enter" value="Войти">
                     </div>
                   </form>
                 </div>
               </div>
             </div>
           </div>
-        </div> <!-- Modal window -->
-
-
+        </div> 
     </header>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="/src/modal.js" type="text/javascript"></script>
 </body>
 </html>
