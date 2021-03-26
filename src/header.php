@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="/css/header.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     <script src="/bootstrap/js/bootstrap.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/modal.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 </head>
 <body>
 	<header>
@@ -50,7 +53,7 @@
                 <div class="header__lk text-center">
                     <? if (!isset($_SESSION['user']['login'] )): ?>
                         <div class="lk__info">Личный кабинет</div>
-                        <a href="/lk.php"><img src="/img/door.png" alt="" class="lk__logo"></a>
+                        <img src="/img/door.png" alt="" class="lk__logo" data-modal="#modal">
                     <? else: ?>
                         <div class="lk__info"><?= $_SESSION['user']['login'] ;?></div>
                         <a href="/lk.php"><img src="/img/doorway.png" alt="" class="lk__logo"></a>
@@ -62,7 +65,69 @@
            </div>
         </div>
         <div class="line"></div>
-    </header>
 
+
+
+
+        <div class="modal" id="modal">
+          <div class="login_wrap">
+            <div class="login_tab">
+
+              <input id="tab-1" type="radio" name="tab" class="sign_in" checked>
+                <label for="tab-1" class="tab"><b>Регистрация</b></label>
+              <input id="tab-2" type="radio" name="tab" class="sign_up">
+                <label for="tab-2" class="tab"><b>Авторизация</b></label>
+
+              <div class="login_form">
+                
+                <div class="sign-up_tab">
+
+                  <form method="post" action="doreg.php">
+                    <div class="group">
+                      <label class="label">Логин</label>
+                      <input type="text" name="login" class="input" placeholder="Ваш логин" required="true">
+                    </div>
+                    <div class="group">
+                      <label class="label">Email адрес</label>
+                      <input type="text" name="email" class="input" placeholder="Ваш E-mail" required="true">
+                    </div>
+                    <div class="group">
+                      <label class="label">Пароль</label>
+                      <input type="password" id="password" name="pass" class="input" required="true">
+                    </div>
+                    <div class="group">
+                      <label class="label">Повторите пароль</label>
+                      <input type="password" id="passwordp" name="passp" class="input" required="true">
+                    </div>
+                    <div class="group">
+                      <input type="submit" class="button" name="go_reg" value="Зарегистрироваться">
+                    </div>
+                  </form>
+
+                </div>
+
+                <div class="sign-in_tab">
+                  <form method="post" action="enter.php" id="login">
+                    <div class="group">
+                      <label class="label">Логин</label>
+                      <input type="text" name="login" class="input" placeholder="Логин">
+                    </div>
+                    <div class="group">
+                      <label class="label">Пароль</label>
+                      <input type="password" name="pass" class="input" placeholder="Пароль">
+                    </div>
+                    <div class="group">
+                      <input type="submit" class="button" name="go_enter" value="Войти">
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> <!-- Modal window -->
+
+
+    </header>
+    <script src="/src/modal.js" type="text/javascript"></script>
 </body>
 </html>
