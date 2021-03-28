@@ -28,6 +28,10 @@
 	border: 0px !important;
 }
 
+.card-text {
+	color: grey;
+}
+
 .card-body {
 	padding: 0px !important;
 }

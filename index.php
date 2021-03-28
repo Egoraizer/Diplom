@@ -98,7 +98,7 @@
                 </div>
 
 
-                <div class="card-text" style="color: grey;"> 
+                <div class="card-text"> 
                   <?= $row['nameauthor']?>  
                 </div>
 

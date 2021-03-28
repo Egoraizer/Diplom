@@ -182,11 +182,11 @@
                     </div>
                     <div class="group">
                       <label class="label">Пароль</label>
-                      <input type="password" name="userpassword" name="pass" class="input" required="true">
+                      <input type="password" name="userpassword" name="pass" class="input" placeholder="Ваш пароль" required="true">
                     </div>
                     <div class="group">
                       <label class="label">Повторите пароль</label>
-                      <input type="password"  name="userrpassword" class="input" required="true">
+                      <input type="password"  name="userrpassword" class="input" placeholder="Повторите пароль" required="true">
                     </div>
                     <div class="group">
                       <input type="submit" class="button" name="reg" value="Зарегистрироваться">
