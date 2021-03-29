@@ -1,9 +1,10 @@
 .cart__page {
-    padding: 15px 50px 0px 50px;
+    padding: 15px 75px 0px 75px;
 }
 
 .product__content {
     margin-bottom: 50px;
+    padding-top: 20px	;
 }
 
 .product-author {
