@@ -81,11 +81,11 @@
 					</div>
 				</div>
 			<?endwhile;?>
-			<div class="cart__order" style="background-color: pink;">
-				<div class="order-content row">
-					<div class="order-product col text-center">Товаров: <?= $totalamount; ?></div>
-					<div class="order-price col">Заказ на сумму: <?= $totalprice;?></div>
-					<div class="order-submit col">
+			<div class="cart__order text-center">
+				<div class="order-content">
+					<div class="order-product">Товаров: <?= $totalamount; ?></div>
+					<div class="order-price">Заказ на сумму: <?= $totalprice;?></div>
+					<div class="order-submit">
 						<form action="/order.php" method="post">
 							<button type="submit" class="btn btn-success" name="order">
 								Оформить заказ

@@ -4,9 +4,17 @@
 
 .product__content {
     margin-bottom: 50px;
-    padding-top: 20px	;
+    padding-top: 25px;
 }
 
 .product-author {
     color: grey;
+}
+
+.cart__order {
+	background-color: rgb(123, 208, 219); 	
+	padding: 20px;	
+	position: fixed;
+	bottom: 30px;
+	right: 15px;
 }
