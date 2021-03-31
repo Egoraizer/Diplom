@@ -39,3 +39,7 @@
 .row > * { 
 	padding: 0px !important;
 }
+
+.search__result {
+	margin: 15px 0px 15px 0px;
+}

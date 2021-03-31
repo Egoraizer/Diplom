@@ -1,5 +1,9 @@
 <?php session_start(); ob_start(); require_once './src/db.php'; require_once './src/functions.php'; connect_to_db(); ?>
 
+<? if ($_POST['zalupa']) 
+echo "ПЕРЕВОД УСПЕШНЫЙ!!!!!!!!!!";
+?>
+
 <? 
   if ($_REQUEST['addproduct']) :
 
@@ -85,11 +89,17 @@
             $search = $_GET['q'];
             $query_search = $conn->query("SELECT * FROM `products` INNER JOIN `productcategory` ON products.category = productcategory.idcategory INNER JOIN `author` ON products.author = author.idauthor  WHERE `title` LIKE '%$search%' ORDER BY products.idproduct"); ?>
 
-            <?if ($query_search->num_rows === 0 ) :?>
-              <div class="search__result">Извините, но по вашему запросу <b>"<?= $search ?>"</b> ничего не найдено.</div> 
-            <?else :?>
-              <div class="search__result">По запросу <b>"<?= $search ?>"</b> найдено:</div> 
-           <?endif;?>
+              <div class="search__result text-center"> 
+                <h5>
+                  <?if ($query_search->num_rows === 0 ) :?>
+                    Извините, но по вашему запросу <b>"<?= $search ?>"</b> ничего не найдено.</h5>
+                  <?else :?>
+                    По запросу <b>"<?= $search ?>"</b> найдено:
+                  <?endif;?>
+                </h5>
+                
+              </div> 
+           
 
         <div class="container__products">
           <div class="products__cards row">
@@ -99,7 +109,7 @@
 
                 <div class="card-img-top mb-2 text-center "><img src="<?= $row['image']?>" style="width: 250px; width: 150px;"></div>
 
-                <div class="card-body ">
+                <div class="card-body">
 
                   <div class="card-title">
                     <?= $row['price']?> руб.<br> <?= $row['title'] ?> 
