@@ -83,13 +83,25 @@
 			<?endwhile;?>
 			<div class="cart__order text-center">
 				<div class="order-content">
-					<div class="order-product">Товаров: <?= $totalamount; ?></div>
-					<div class="order-price">Заказ на сумму: <?= $totalprice;?></div>
+					<div class="order-product">Товаров: <?= $totalamount; ?> шт.</div>
+					<div class="order-price">Заказ на сумму: <?= $totalprice;?> руб.</div>
 					<div class="order-submit">
-						<form action="/order.php" method="post">
-							<button type="submit" class="btn btn-success" name="order">
-								Оформить заказ
-							</button>	
+
+						<form method="POST" action="https://yoomoney.ru/quickpay/confirm.xml">    
+							<input type="hidden" name="receiver" value="4100116637537324">    
+							<input type="hidden" name="formcomment" value="Проект «Железный человек»: реактор холодного ядерного синтеза">    
+							<input type="hidden" name="short-dest" value="Проект «Железный человек»: реактор холодного ядерного синтеза">    
+							<input type="hidden" name="label" value="1">    
+							<input type="hidden" name="quickpay-form" value="donate">    
+							<input type="hidden" name="targets" value="транзакция 1">    
+							<input type="hidden" name="sum" value="2" data-type="number">    
+							<input type="hidden" name="comment" value="Хотелось бы получить дистанционное управление.">    
+							<input type="hidden" name="need-fio" value="true">    
+							<input type="hidden" name="need-email" value="true">    
+							<input type="hidden" name="need-phone" value="true">    
+							<input type="hidden" name="need-address" value="false"> 
+							<input type="hidden" name="successURL" value="http://diplom/index.php">     
+							<input type="submit" class="btn btn-success" value="Оформить заказ">
 						</form>
 					</div>
 				</div>

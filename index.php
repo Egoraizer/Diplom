@@ -1,8 +1,6 @@
 <?php session_start(); ob_start(); require_once './src/db.php'; require_once './src/functions.php'; connect_to_db(); ?>
 
-<? if ($_POST['zalupa']) 
-echo "ПЕРЕВОД УСПЕШНЫЙ!!!!!!!!!!";
-?>
+
 
 <? 
   if ($_REQUEST['addproduct']) :
@@ -73,11 +71,13 @@ echo "ПЕРЕВОД УСПЕШНЫЙ!!!!!!!!!!";
 
       <div class="main__category">
         <div class="category__content">
-          <h1 class="text-center">Категории</h1>
-
+          <h4>Фильтр</h4>
               <div class="category__filter-item"> 
                 <label class="filter__checkbox">
-                  <input type="checkbox" name="" data-idprod="">
+                  <form>
+                    <input type="submit" name="f" data-idprod="" value="триллер">
+                  </form>
+                  
                 </label>
               </div>
         </div>
@@ -141,7 +141,7 @@ echo "ПЕРЕВОД УСПЕШНЫЙ!!!!!!!!!!";
         <?else :?>
         <div class="container__products">
           <div class="products__cards row">
-          <?$query_products = $conn->query("SELECT * FROM `products` INNER JOIN `productcategory` ON products.category = productcategory.idcategory INNER JOIN `author` ON products.author = author.idauthor ORDER BY products.idproduct LIMIT 8");
+          <? $query_products = $conn->query("SELECT * FROM `products` INNER JOIN `productcategory` ON products.category = productcategory.idcategory INNER JOIN `author` ON products.author = author.idauthor ORDER BY products.idproduct LIMIT 8");
              while ($row = $query_products->fetch_assoc()) : $currentproduct = $row['idproduct']?>
               <div class="card col-2">
 
@@ -176,7 +176,12 @@ echo "ПЕРЕВОД УСПЕШНЫЙ!!!!!!!!!!";
              <? endwhile; ?>
              <?endif;?>
             </div> 
-  
+              <div class="button text-center">
+                <form>
+                  <button class="btn btn-dark" name="next" value="<?=$amountproducts ?>">Показать еще</button>
+                </form>
+              </div>
+              
           </div>
         </div>
       </div>
