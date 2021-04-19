@@ -131,7 +131,7 @@
 
             <div class="header__personal">
                 <div class="header__cart">
-                    <?if (isset($_SESSION['user']['cart'])) :
+                    <?if (!empty($_SESSION['user']['cart'])) :
                     $productamount = count($_SESSION['user']['cart']); ?>
                     <div class="cart__info">В корзине товаров: <?= $productamount;?> </div>
                     <a href="/cart.php"><img src="/img/books.png" alt="" class="cart__logo"></a>

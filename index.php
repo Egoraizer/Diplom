@@ -175,13 +175,7 @@
               
              <? endwhile; ?>
              <?endif;?>
-            </div> 
-              <div class="button text-center">
-                <form>
-                  <button class="btn btn-dark" name="next" value="<?=$amountproducts ?>">Показать еще</button>
-                </form>
-              </div>
-              
+            </div>    
           </div>
         </div>
       </div>
