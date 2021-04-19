@@ -85,11 +85,12 @@
 
 
       <div class="main__products">
+
         <? if ($_GET['q']) :
             $search = $_GET['q'];
             $query_search = $conn->query("SELECT * FROM `products` INNER JOIN `productcategory` ON products.category = productcategory.idcategory INNER JOIN `author` ON products.author = author.idauthor  WHERE `title` LIKE '%$search%' ORDER BY products.idproduct"); ?>
 
-              <div class="search__result text-center"> 
+              <div class="search__result text-center">
                 <h5>
                   <?if ($query_search->num_rows === 0 ) :?>
                     Извините, но по вашему запросу <b>"<?= $search ?>"</b> ничего не найдено.</h5>
@@ -97,8 +98,6 @@
                     По запросу <b>"<?= $search ?>"</b> найдено:
                   <?endif;?>
                 </h5>
-                
-              </div> 
            
 
         <div class="container__products">
@@ -145,7 +144,10 @@
              while ($row = $query_products->fetch_assoc()) : $currentproduct = $row['idproduct']?>
               <div class="card col-2">
 
-                <div class="card-img-top mb-2 text-center "><img src="<?= $row['image']?>" style="width: 250px; width: 150px;"></div>
+                <div class="card-img-top mb-2 text-center ">
+                  <a href="show.php?productid=<?= $row['idproduct']?>"><img src="<?= $row['image']?>" style="width: 250px; width: 150px;">
+                  </a>
+                </div>
 
                 <div class="card-body ">
 
@@ -161,13 +163,13 @@
                 </div>
 
                 <div class="card-btn text-center"> 
+
                   <form action="" method="get">
                     <? if (isset($_SESSION['user']['cart'][$currentproduct])): ?>
                       <button type="submit" name="productincart" class="btn btn-danger" style="width:100%;" value="<?= $row['idproduct']?>">В корзине</button>
                     <? else : ?>
                       <button type="submit" name="addproduct" class="btn btn-success" style="width:100%;" value="<?= $row['idproduct']?>">В корзину</button>
                     <? endif;?>
-
                   </form>
 
                 </div>      
@@ -179,6 +181,8 @@
           </div>
         </div>
       </div>
+    </div>
+      
   </main> 
 </body>
 </html>
