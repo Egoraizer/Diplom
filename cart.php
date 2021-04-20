@@ -94,7 +94,7 @@
 							<input type="hidden" name="label" value="1">    
 							<input type="hidden" name="quickpay-form" value="donate">    
 							<input type="hidden" name="targets" value="транзакция 1">    
-							<input type="hidden" name="sum" value="2" data-type="number">    
+							<input type="hidden" name="sum" value="<?= $totalprice?>" data-type="number">    
 							<input type="hidden" name="comment" value="Хотелось бы получить дистанционное управление.">    
 							<input type="hidden" name="need-fio" value="true">    
 							<input type="hidden" name="need-email" value="true">    

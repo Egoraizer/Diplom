@@ -1,0 +1,20 @@
+* {
+   font-family: 'Roboto', sans-serif;
+}
+
+.info-img {
+	margin-left: 15px;
+	margin-right: 15px;
+}
+
+.content-desription {
+	color: grey;
+}
+
+.cart__order {
+	background-color: rgb(123, 208, 219); 	
+	padding: 20px;	
+	position: fixed;
+	bottom: 30px;
+	right: 15px;
+}
