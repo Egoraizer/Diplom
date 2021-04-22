@@ -71,10 +71,11 @@
 
       <div class="main__category">
         <div class="category__content">
-          <h4>Фильтр</h4>
+          <h4>Категории</h4>
               <div class="category__filter-item"> 
                 <label class="filter__checkbox">
                   <form>
+                    <? ?>
                     <input type="submit" name="f" data-idprod="" value="триллер">
                   </form>
                   
@@ -140,7 +141,13 @@
         <?else :?>
         <div class="container__products">
           <div class="products__cards row">
-          <? $query_products = $conn->query("SELECT * FROM `products` INNER JOIN `productcategory` ON products.category = productcategory.idcategory INNER JOIN `author` ON products.author = author.idauthor ORDER BY products.idproduct LIMIT 8");
+            <?
+            if ($_GET['page']) { 
+              $predlimit = $predlimit + 8; 
+              $test = 8 * $_GET['page']; echo $predlimit ."+". $test;
+            }
+              else $predlimit = 0; $test = 8; ?>
+          <? $query_products = $conn->query("SELECT * FROM `products` INNER JOIN `productcategory` ON products.category = productcategory.idcategory INNER JOIN `author` ON products.author = author.idauthor ORDER BY products.idproduct LIMIT $predlimit,$test");
              while ($row = $query_products->fetch_assoc()) : $currentproduct = $row['idproduct']?>
               <div class="card col-2">
 
@@ -171,18 +178,15 @@
                       <button type="submit" name="addproduct" class="btn btn-success" style="width:100%;" value="<?= $row['idproduct']?>">В корзину</button>
                     <? endif;?>
                   </form>
-
                 </div>      
               </div>
-              
              <? endwhile; ?>
              <?endif;?>
-            </div>    
-          </div>
+            </div>
+          </div> 
         </div>
       </div>
-    </div>
-      
+    </div>                         
   </main> 
 </body>
 </html>

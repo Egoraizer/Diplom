@@ -25,10 +25,10 @@
 			$query_book = $conn->query("SELECT * FROM products INNER JOIN productcategory ON products.category = productcategory.idcategory where products.idproduct = $idproduct");
 			while($row = $query_book->fetch_assoc()) :?>
 				<div class="info-img col-3">
-					<img src="<?= $row['image']?>" height="500px" width="330px"> <br>
+					<img src="<?= $row['image']?>" height="530px" width="330px"> <br>
 				</div>
 				<div class="info-content col-8">
-					<div class="content-title">Наименование:<?= $row['title']?></div>
+					<div class="content-title">Наименование: <?= $row['title']?></div>
 					<div class="content-category">Жанр: <?= $row['namecategory']?></div>
 					<div class="content-price">Цена: <?= $row['price']?> рублей за 1 шт.</div>
 					<div class="content-desription"><?= $row['description']?></div>

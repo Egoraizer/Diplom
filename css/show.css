@@ -2,9 +2,21 @@
    font-family: 'Roboto', sans-serif;
 }
 
-.info-img {
-	margin-left: 15px;
+.main__page {
+	margin-top: 15px ;
+	margin-left: 5px;
 	margin-right: 15px;
+}
+
+.info-img {
+	margin-left: 5px;
+}
+
+.content-desription {
+	margin-top: 15px;
+}
+.content-order {
+	margin-top: 30px;
 }
 
 .content-desription {
