@@ -75,10 +75,11 @@
               <div class="category__filter-item"> 
                 <label class="filter__checkbox">
                   <form>
-                    <? ?>
-                    <input type="submit" name="f" data-idprod="" value="триллер">
+                    <?$query_category = $conn->query("SELECT * FROM `productcategory`");
+                      while($row = $query_category->fetch_assoc()):?>
+                        <button class="btn btn-secondary" type="submit" name="f" value="<?=$row['idcategory']?>"><?=$row['namecategory']?></button>
                   </form>
-                  
+                  <?endwhile;?>
                 </label>
               </div>
         </div>
@@ -143,8 +144,9 @@
           <div class="products__cards row">
             <?
             if ($_GET['page']) { 
-              $predlimit = $predlimit + 8; 
-              $test = 8 * $_GET['page']; echo $predlimit ."+". $test;
+              $test = 8 * $_GET['page'];
+              $predlimit = $test - 8; 
+              echo $predlimit."+".$test;
             }
               else $predlimit = 0; $test = 8; ?>
           <? $query_products = $conn->query("SELECT * FROM `products` INNER JOIN `productcategory` ON products.category = productcategory.idcategory INNER JOIN `author` ON products.author = author.idauthor ORDER BY products.idproduct LIMIT $predlimit,$test");

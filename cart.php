@@ -85,8 +85,10 @@
 				<div class="order-content">
 					<div class="order-product">Товаров: <?= $totalamount; ?> шт.</div>
 					<div class="order-price">Заказ на сумму: <?= $totalprice;?> руб.</div>
+					<?if (!isset($_SESSION['user']['login'])) :?>
+					<div class="zareg"><br>Войдите, чтобы продолжить</div>
+					<?else :?>
 					<div class="order-submit">
-
 						<form method="POST" action="https://yoomoney.ru/quickpay/confirm.xml">    
 							<input type="hidden" name="receiver" value="4100116637537324">    
 							<input type="hidden" name="formcomment" value="Проект «Железный человек»: реактор холодного ядерного синтеза">    
@@ -104,6 +106,7 @@
 							<input type="submit" class="btn btn-success" value="Оформить заказ">
 						</form>
 					</div>
+					<?endif;?>
 				</div>
 				
 			</div>
