@@ -2,96 +2,78 @@
 
   <?
   
-  if($_REQUEST['reg']):
-		$userlogin = trim(HtmlSpecialChars(strip_tags($_POST['userlogin'])));
-		$useremail = trim(HtmlSpecialChars(strip_tags($_POST['useremail'])));
-		$userpassword = trim(HtmlSpecialChars(strip_tags($_POST['userpassword'])));
-		$userrpassword = trim(HtmlSpecialChars(strip_tags($_POST['userrpassword'])));
+  if ($_REQUEST['reg']):
+      $userlogin = trim(HtmlSpecialChars(strip_tags($_POST['userlogin'])));
+      $useremail = trim(HtmlSpecialChars(strip_tags($_POST['useremail'])));
+      $userpassword = trim(HtmlSpecialChars(strip_tags($_POST['userpassword'])));
+      $userrpassword = trim(HtmlSpecialChars(strip_tags($_POST['userrpassword'])));
 
-		if (empty($userlogin) || empty($useremail) || empty($userpassword) || empty($userrpassword)): ?>
-			<div class="alert alert-danger alert-dismissible fade show" role="alert">
-		  		<strong>Ошибка!</strong> Заполните все поля
-		  		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-			</div>
-		<? else: 
-			$query_users = $conn->query("SELECT `login`, `email` FROM `users`");
-			while($row = $query_users->fetch_assoc()):
-
-				if ($row['login'] == $userlogin || $row['email'] == $useremail):?>
-					<div class="alert alert-warning alert-dismissible fade show" role="alert">
-				  		<strong>Ошибка!</strong> Логин или почта уже заняты.
-				  		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-					</div>
-				<? break;?>	
-
-				<? elseif(strlen($userlogin) > 50 || strlen($useremail) > 50): ?>
+		  $query_users = $conn->query("SELECT `login`, `email` FROM `users` WHERE `login` = '$userlogin' OR `email` = '$useremail'");
+      
+      if ($query_users->num_rows === 0): ?>
+      <?  if (strlen($userlogin) > 50 || strlen($useremail) > 50): ?>
 					<div class="alert alert-warning alert-dismissible fade show" role="alert">
 				  		<strong>Ошибка!</strong> Логин или почта слишком длинные. Напишите логин и почту менее 50 символов.
 				  		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 					</div>
-				<? break;?>	
-
-				<? elseif($userrpassword !== $userpassword): ?>
+				<? elseif ($userrpassword !== $userpassword): ?>
 					<div class="alert alert-warning alert-dismissible fade show" role="alert">
 				  		<strong>Ошибка!</strong> Пароли не совпадают
 				  		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 					</div>
-				<? break;?>	
-
 				<? else:
-					$query_new_user = $conn->query("INSERT INTO `users` (`login`, `email`, `password`) VALUES ('$userlogin', '$useremail', '$userpassword')");
-					$_SESSION['user']['login'] = $userlogin;
-					$_SESSION['user']['email'] = $useremail;
-					header('Location:index.php');
-					ob_end_flush();
-					exit();?>	
-
-			<? endif; 	endwhile;?>
-
+            $query_new_user = $conn->query("INSERT INTO `users` (`login`, `email`, `password`) VALUES ('$userlogin', '$useremail', '$userpassword')");
+            $_SESSION['user']['login'] = $userlogin;
+            $_SESSION['user']['email'] = $useremail;
+            header('Location:index.php');
+            ob_end_flush();
+            exit();
+        ?>	
+          <? endif; ?>	
+     <? else : ?> 
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Ошибка!</strong> Логин или почта уже заняты.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <? endif; ?>
 		<? endif; ?>
 
-	<? endif;?>
 
-  <? if($_REQUEST['enter']):
+  <? if ($_REQUEST['enter']):
 		$userlogin = trim(HtmlSpecialChars(strip_tags($_POST['userlogin'])));
 		$userpassword = trim(HtmlSpecialChars(strip_tags($_POST['userpassword'])));
-			if (empty($userlogin) || empty($userpassword)): ?>
-				<div class="alert alert-danger alert-dismissible fade show" role="alert">
-				<strong>Ошибка!</strong> Заполните все поля
-				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-				</div>
-			<?else: $query_users = $conn->query("SELECT * FROM `users` WHERE `login`= '$userlogin'");
+
+		$query_users = $conn->query("SELECT * FROM `users` WHERE `login`= '$userlogin'");
 				if($query_users->num_rows === 0): ?>
 					<div class="alert alert-warning alert-dismissible fade show" role="alert">
-					<strong> Ошибка! </strong> Такого пользователя не сущесвует
-					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <strong> Ошибка! </strong> Такого пользователя не сущесвует
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 					</div>
 
 				<?else:
 					while($row = $query_users->fetch_assoc()):
 						if ($userpassword == $row['password']): ?>
 							<div class="alert alert-success alert-dismissible fade show" role="alert">
-							<strong>Успешно!</strong> Вход выполнен.
-							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <strong>Успешно!</strong> Вход выполнен.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 							</div>
 						<? 					
 						$_SESSION['user']['login'] = $userlogin;
 						$_SESSION['user']['email']  = $row['email'];
-						header('Location: index.php')
-						?>
-						<?break;?>
+						header('Location: index.php');
+            ?>
+						  <?break;?>
 						<?elseif ($userpassword != $row['password']):?>
 							<div class="alert alert-danger alert-dismissible fade show" role="alert">
 							<strong>Ошибка! </strong> Пароль введен не верно.
 							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 							</div>
-						<?break;?>
+						  <?break;?>
 						<?endif;?>
 					<?endwhile;?>
 					<? endif;?>	
 			<? endif;?>	
-		
-		<? endif;?>
+	
 <!DOCTYPE html>
 <html>
 
@@ -178,7 +160,7 @@
                     </div>
                     <div class="group">
                       <label class="label">Email адрес</label>
-                      <input type="text" name="useremail" class="input" placeholder="Ваш E-mail" required="true">
+                      <input type="email" name="useremail" class="input" placeholder="Ваш E-mail" required="true">
                     </div>
                     <div class="group">
                       <label class="label">Пароль</label>

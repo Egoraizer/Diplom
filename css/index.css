@@ -10,6 +10,13 @@
     left:0;
     width: 30%;
 }
+.nav-link {
+	color: red;
+}
+
+.nav-link:hover {
+	color: black;
+}
 .main__products {
     width: 100%;
 }
@@ -43,3 +50,4 @@
 .search__result {
 	margin: 15px 0px 15px 0px;
 }
+

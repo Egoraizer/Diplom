@@ -77,7 +77,7 @@
                   <form>
                     <?$query_category = $conn->query("SELECT * FROM `productcategory`");
                       while($row = $query_category->fetch_assoc()):?>
-                        <button class="btn btn-secondary" type="submit" name="f" value="<?=$row['idcategory']?>"><?=$row['namecategory']?></button>
+                        <a class="nav-link" href="index.php?f=<?= $row['idcategory']?>"><?=$row['namecategory']?></a>
                   </form>
                   <?endwhile;?>
                 </label>
@@ -141,15 +141,25 @@
 
         <?else :?>
         <div class="container__products">
-          <div class="products__cards row">
-            <?
-            if ($_GET['page']) { 
-              $test = 8 * $_GET['page'];
-              $predlimit = $test - 8; 
-              echo $predlimit."+".$test;
+        <?
+            if ($_GET['f']) {
+              $idcategory = $_GET['f'];
+              $query_products = $conn->query("SELECT * FROM `products` INNER JOIN `productcategory` ON products.category = productcategory.idcategory INNER JOIN `author` ON products.author = author.idauthor WHERE `category` = $idcategory ORDER BY products.idproduct ");
+              if ($query_products->num_rows === 0) :?>
+                <div class="search__result text-center">
+                  <h5>Извините, но мы не нашли такой категории или отсуствуют товары в даннной категории. Пожалуйста, выберите другую категорию.</h5>
+                </div>
+                <?endif;?>
+              <? 
             }
-              else $predlimit = 0; $test = 8; ?>
-          <? $query_products = $conn->query("SELECT * FROM `products` INNER JOIN `productcategory` ON products.category = productcategory.idcategory INNER JOIN `author` ON products.author = author.idauthor ORDER BY products.idproduct LIMIT $predlimit,$test");
+            elseif ($_GET['page']) { 
+              $predlimit = 8 * $_GET['page'];
+              $query_products = $conn->query("SELECT * FROM `products` INNER JOIN `productcategory` ON products.category = productcategory.idcategory INNER JOIN `author` ON products.author = author.idauthor ORDER BY products.idproduct LIMIT $predlimit,8 ");
+            }
+            else { $query_products = $conn->query("SELECT * FROM `products` INNER JOIN `productcategory` ON products.category = productcategory.idcategory INNER JOIN `author` ON products.author = author.idauthor ORDER BY products.idproduct LIMIT 0,8 "); } ?>
+          <div class="products__cards row">
+
+          <?  
              while ($row = $query_products->fetch_assoc()) : $currentproduct = $row['idproduct']?>
               <div class="card col-2">
 
@@ -186,6 +196,31 @@
              <?endif;?>
             </div>
           </div> 
+          <div class="products__next-page text-center">
+          <?if (!isset($_REQUEST['q']) && !isset($_REQUEST['f'])):?>
+            <?if ($_GET['page']): 
+              $nextpage = $_GET['page'] + 1;
+              $backpage = $_GET['page'] - 1;
+              $nextlimit = $predlimit + 8; 
+              $nextpage_query = $conn->query("SELECT * FROM `products` INNER JOIN `productcategory` ON products.category = productcategory.idcategory INNER JOIN `author` ON products.author = author.idauthor ORDER BY products.idproduct LIMIT $nextlimit,8 ");
+                if ($nextpage_query->num_rows === 0) :?>
+                  <a class="btn btn-success" href="index.php?page=<?=$backpage?>"><</a>
+                  <?=$_GET['page']+1?>
+                  <a class="btn btn-success disabled" href="index.php?page=<?=$nextpage?>">></a>
+              <?elseif ($_GET['page'] == 0) :?>
+                  <a class="btn btn-success disabled" href="index.php?page=<?=$backpage?>"><</a>
+                <?else :?>
+                  <a class="btn btn-success" href="index.php?page=<?=$backpage?>"><</a>
+                  <?=$_GET['page']+1?>
+                  <a class="btn btn-success" href="index.php?page=<?=$nextpage?>">></a>
+                <?endif;?>
+            <?else:?>
+              <a class="btn btn-success disabled"><</a>  
+              <?=$_GET['page']+1?>
+              <a class="btn btn-success" href="index.php?page=1">></a>
+            <?endif;?>
+          <?endif;?>
+          </div>
         </div>
       </div>
     </div>                         
