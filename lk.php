@@ -15,6 +15,6 @@
 </head>
 <body>
 	<?php require_once './src/header.php'?>
-	<div class="123"><?echo $_SESSION['userlogin'];?></div>
+	<div class="123"><?echo $_SESSION['user']['login'];?></div>
 </body>
 </html>

@@ -8,3 +8,8 @@ input {
    outline:none;
    outline-offset: 0;
 }
+
+.table-info td, th {
+    border: 1px solid black !important;
+    padding: 5px;
+}

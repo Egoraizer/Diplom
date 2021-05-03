@@ -25,3 +25,10 @@
 	copy($file['tmp_name'], $fullpath); 	
 	
   }
+
+  function check_variable_values($value) {
+	$check = trim(HtmlSpecialChars(strip_tags($_POST['$value'])));
+	echo $value;
+	echo $value;
+	return $value + $value;
+  }

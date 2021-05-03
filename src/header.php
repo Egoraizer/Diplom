@@ -40,17 +40,17 @@
 
 
   <? if ($_REQUEST['enter']):
-		$userlogin = trim(HtmlSpecialChars(strip_tags($_POST['userlogin'])));
-		$userpassword = trim(HtmlSpecialChars(strip_tags($_POST['userpassword'])));
+        $userlogin = trim(HtmlSpecialChars(strip_tags($_POST['userlogin'])));
+        $userpassword = trim(HtmlSpecialChars(strip_tags($_POST['userpassword'])));
 
-		$query_users = $conn->query("SELECT * FROM `users` WHERE `login`= '$userlogin'");
+        $query_users = $conn->query("SELECT * FROM `users` WHERE `login`= '$userlogin'");
 				if($query_users->num_rows === 0): ?>
 					<div class="alert alert-warning alert-dismissible fade show" role="alert">
             <strong> Ошибка! </strong> Такого пользователя не сущесвует
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 					</div>
 
-				<?else:
+			<?else:
 					while($row = $query_users->fetch_assoc()):
 						if ($userpassword == $row['password']): ?>
 							<div class="alert alert-success alert-dismissible fade show" role="alert">
