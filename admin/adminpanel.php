@@ -1,135 +1,142 @@
 <?php session_start(); require_once '../src/db.php'; require_once '../src/functions.php'; connect_to_db();?>
 
 <?
-    if ($_POST['adminlog']):
-        $login = trim(HtmlSpecialChars(strip_tags($_POST['login'])));
-        $password = trim(HtmlSpecialChars(strip_tags($_POST['password'])));
+  if ($_POST['adminlog']) {
+    $login = trim(HtmlSpecialChars(strip_tags($_POST['login'])));
+    $password = trim(HtmlSpecialChars(strip_tags($_POST['password'])));
 
-        $query_users = $conn->query("SELECT * FROM `users` WHERE `login`= '$login' AND (`role` = 'moderator' or `role` = 'admin')");
-        if ($query_users->num_rows === 0): ?>
+    $query_users = $conn->query("SELECT * FROM `users` WHERE `login`= '$login' AND (`role` = 'moderator' or `role` = 'admin')");
 
-          <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong> Ошибка! </strong> Такого пользователя не сущесвует или у вас недостаточно прав.
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
+    if ($query_users->num_rows === 0) MessageForUser('warning', 'Такого пользователя не сущесвует или у вас недостаточно прав.');
+    else {
+      while ($row = $query_users->fetch_assoc()) {
+        if ($password == $row['password']) { $_SESSION['admin']['login'] = $login; break; }
+        elseif ($password != $row['password']) { MessageForUser('danger', 'Пароль введен не верно.'); break; } 
+      }
+    }	
+  } 
+?>
 
-      <?else:
-          while ($row = $query_users->fetch_assoc()):
-            if ($password == $row['password']): ?>
-            <? $_SESSION['admin']['login'] = $login; ?>
-              <?break;?>
-            <?elseif ($password != $row['password']):?>
-              <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <strong>Ошибка! </strong> Пароль введен не верно.
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              </div>
-              <?break;?>
-            <?endif;?>
-          <?endwhile;?>
-          <? endif;?>	
-      <? endif;?>	
+<?  
+  if ($_POST['addbook']){ 
+    $title = trim(HtmlSpecialChars(strip_tags($_POST['title'])));
+    $idauthor = trim(HtmlSpecialChars(strip_tags($_POST['idauthor'])));
+    $description = trim(HtmlSpecialChars(strip_tags($_POST['description'])));
+    $idcategory = trim(HtmlSpecialChars(strip_tags($_POST['idcategory'])));
+    $price = trim(HtmlSpecialChars(strip_tags($_POST['price'])));
 
-<?  if ($_POST['addbook']): 
-      $title = trim(HtmlSpecialChars(strip_tags($_POST['title'])));
-      $idauthor = trim(HtmlSpecialChars(strip_tags($_POST['idauthor'])));
-      $description = trim(HtmlSpecialChars(strip_tags($_POST['description'])));
-      $idcategory = trim(HtmlSpecialChars(strip_tags($_POST['idcategory'])));
-      $price = trim(HtmlSpecialChars(strip_tags($_POST['price'])));
-
-      if (empty($title) || empty($idauthor) || empty($description) || empty($idcategory) || empty($price)): ?>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-          <strong>Ошибка!</strong> Заполните все поля.
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-      <?elseif (strlen($title) > 40 || strlen($price) > 5):?>
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-          <strong>Ошибка!</strong> Неккоректно введеные данные. Условие: Наименование < 40,  Цена < 5 символов.
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-
-  <? else: 
+    if (empty($title) || empty($idauthor) || empty($description) || empty($idcategory) || empty($price)) MessageForUser('danger', 'Заполните все поля.');
+    elseif (strlen($title) > 40 || strlen($price) > 5) MessageForUser('warning', 'Неккоректно введеные данные. Условие: Наименование < 40,  Цена < 5 символов.');
+    else {
       $check = can_upload_image($_FILES['file']);
-        if($check === true) :
-          make_upload_new_book($_FILES['file'], $conn, $title, $idauthor, $description, $idcategory, $price); ?>
-          <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>Успешно!</strong> Файл загружен на сервер.
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-        <?endif; ?>
-    <?endif; ?>
-  <?endif; ?>
+      if($check === true) {
+        make_upload_new_book($_FILES['file'], $conn, $title, $idauthor, $description, $idcategory, $price); 
+      }
+    }
+  }
+?>
 
-<? if ($_POST['delbook']) :
-      $idbook = trim(HtmlSpecialChars(strip_tags($_POST['idbook'])));
+<? 
+  if ($_POST['delbook']) {
+    $idbook = trim(HtmlSpecialChars(strip_tags($_POST['idbook'])));
 
-      $query_book = $conn->query("SELECT * FROM `products` WHERE `idproduct` = '$idbook'");
-      if ($query_book->num_rows == 0) :?>
-          <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>Ошибка!</strong> Такой книги не сущесвует или неправильно введен номер.
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-      <?else :?>
-        <?$query_del_book = $conn->query("DELETE FROM `products` WHERE `products`.`idproduct` = '$idbook'");?>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>Успешно!</strong> Книга с номером <strong><?=$idbook?></strong> успешно удалена!
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-      <?endif;?>
-  <?endif;?>
+    $query_book = $conn->query("SELECT * FROM `products` WHERE `idproduct` = '$idbook'");
 
-<? if ($_POST['changebook']) :
+    if ($query_book->num_rows == 0) MessageForUser('danger','Такой книги не существует или неправильно введен номер.');
+    else { 
+      $query_del_book = $conn->query("DELETE FROM `products` WHERE `products`.`idproduct` = '$idbook'"); 
+      
+      MessageForUser('success', 'Книга с номером <strong>'.$idbook.'</strong> успешно удалена!'); 
+    }
+  }
+?>
+
+<? 
+  if ($_POST['changebook']) {
     $idbook = trim(HtmlSpecialChars(strip_tags($_POST['idbook'])));
     $title = trim(HtmlSpecialChars(strip_tags($_POST['title'])));
     $idauthor = trim(HtmlSpecialChars(strip_tags($_POST['idauthor'])));
     $description = trim(HtmlSpecialChars(strip_tags($_POST['description'])));
     $idcategory = trim(HtmlSpecialChars(strip_tags($_POST['idcategory'])));
-    $price = trim(HtmlSpecialChars(strip_tags($_POST['price']))); ?>
+    $price = trim(HtmlSpecialChars(strip_tags($_POST['price']))); 
 
-    <?$query_change_book = $conn->query("UPDATE `products` SET `title` = '$title', `author` = '$idauthor', `description` = '$description', `category` = '$idcategory', `price` = '$price' WHERE `idproduct` = '$idbook'");?>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>Успешно!</strong> Книга с номером <strong><?=$idbook?></strong> успешно изменена!
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  <?endif;?>
+    $query_change_book = $conn->query("UPDATE `products` SET `title` = '$title', `author` = '$idauthor', `description` = '$description', `category` = '$idcategory', `price` = '$price' WHERE `idproduct` = '$idbook'");
+    
+    MessageForUser('success', 'Книга с номером <strong>'.$idbook.'</strong> успешно изменена!');
+  }
+?>
 
-
-<? if ($_POST['addcategory']) : 
+<? 
+  if ($_POST['addcategory']) {
     $namecategory = trim(HtmlSpecialChars(strip_tags($_POST['namecategory']))); 
     
-    $query_add_category = $conn->query("INSERT INTO `productcategory` (`namecategory`) VALUES ('$namecategory')");?>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>Успешно!</strong> Новая категория <strong><?=$namecategory?></strong> была успешно добавлена! 
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+    $query_add_category = $conn->query("INSERT INTO `productcategory` (`namecategory`) VALUES ('$namecategory')");
+    
+    MessageForUser('success', 'Новая категория <strong>'.$namecategory.'</strong> была успешно добавлена!');
+  }
+?>
 
-<?endif;?>
-<? if ($_POST['delcategory']) :
-  $idcategory = trim(HtmlSpecialChars(strip_tags($_POST['idcategory'])));
-  
-  $query_del_category = $conn->query("SELECT * FROM `productcategory` WHERE `idcategory` = '$idcategory'");
-    if ($query_del_category->num_rows == 0) :?>
-          <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>Ошибка!</strong> Такой категории не сущесвует или неправильно введен номер.
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-      <?else :?>
-        <?$query_del_book = $conn->query("DELETE FROM `productcategory` WHERE `idcategory` = '$idcategory'");?>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>Успешно!</strong> Категория с номером <strong><?=$idcategory?></strong> успешно удалена!
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-      <?endif;?>
-<?endif;?>
+<? 
+  if ($_POST['delcategory']) {
+    $idcategory = trim(HtmlSpecialChars(strip_tags($_POST['idcategory'])));
+    
+    $query_del_category = $conn->query("SELECT * FROM `productcategory` WHERE `idcategory` = '$idcategory'");
 
-<? if ($_POST['changecategory']) :
-   $idcategory = trim(HtmlSpecialChars(strip_tags($_POST['idcategory'])));
-   $namecategory = trim(HtmlSpecialChars(strip_tags($_POST['namecategory']))); 
-   $query_change_category = $conn->query("UPDATE `productcategory` SET `namecategory` = '$namecategory' WHERE `idcategory` = '$idcategory'");?>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>Успешно!</strong> Категория с номером <strong><?=$idcategory?></strong> успешно изменена!
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-<?endif;?>
+      if ($query_del_category->num_rows == 0) MessageForUser('danger', 'Такой категории не существует или неправильно введен номер.');
+      else {
+          $query_del_book = $conn->query("DELETE FROM `productcategory` WHERE `idcategory` = '$idcategory'");
+          MessageForUser('success', 'Категория с номером <strong>'.$idcategory.'</strong> успешно удалена!'); 
+      }
+  }
+?>
+
+<? 
+  if ($_POST['changecategory']) {
+    $idcategory = trim(HtmlSpecialChars(strip_tags($_POST['idcategory'])));
+    $namecategory = trim(HtmlSpecialChars(strip_tags($_POST['namecategory']))); 
+
+    $query_change_category = $conn->query("UPDATE `productcategory` SET `namecategory` = '$namecategory' WHERE `idcategory` = '$idcategory'");
+
+    MessageForUser('success', 'Категория с номером <strong>'.$idcategory.'</strong> успешно изменена!');
+  }
+?>
+
+<? 
+  if ($_POST['addauthor']) {
+    $nameauthor = trim(HtmlSpecialChars(strip_tags($_POST['nameauthor']))); 
+    
+    $query_add_author = $conn->query("INSERT INTO `author` (`nameauthor`) VALUES ('$nameauthor')");
+    
+    MessageForUser('success', 'Новый автор <strong>'.$nameauthor.'</strong> был успешно добавлен!');
+  }
+?>
+
+<? 
+  if ($_POST['delauthor']) {
+    $idauthor = trim(HtmlSpecialChars(strip_tags($_POST['idauthor'])));
+    
+    $query_del_author = $conn->query("SELECT * FROM `author` WHERE `idauthor` = '$idauthor'");
+
+      if ($query_del_author->num_rows == 0) MessageForUser('danger', 'Такого автора не существует или неправильно введен номер.');
+      else {
+          $query_del_book = $conn->query("DELETE FROM `author` WHERE `idauthor` = '$idauthor'");
+          MessageForUser('success', 'Автор с номером <strong>'.$idauthor.'</strong> успешно удален!'); 
+      }
+  }
+?>
+
+<? 
+  if ($_POST['changeauthor']) {
+    $idauthor = trim(HtmlSpecialChars(strip_tags($_POST['idauthor'])));
+    $nameauthor = trim(HtmlSpecialChars(strip_tags($_POST['nameauthor']))); 
+
+    $query_change_author = $conn->query("UPDATE `author` SET `nameauthor` = '$nameauthor' WHERE `idauthor` = '$idauthor'");
+
+    MessageForUser('success', 'Автор с номером <strong>'.$idauthor.'</strong> успешно изменен!');
+  }
+?>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -197,8 +204,7 @@
             </table>
           <?endif;?>
         </div>
-        <div class="main__buttons col">
-          <?$test = '2'; $test = check_variable_values(10); echo $test;?>  
+        <div class="main__buttons col"> 
           <div class="buttons">
             <div class="buttons__book">
               <p>
@@ -212,6 +218,13 @@
                 <a class="btn btn-success" data-bs-toggle="collapse" href="#multiCollapseExample21" role="button" aria-expanded="false" aria-controls="multiCollapseExample21">Добавить новую категорию</a>
                 <a class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample22" aria-expanded="false" aria-controls="multiCollapseExample22">Удалить категорию</a> 
                 <a class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample23" aria-expanded="false" aria-controls="multiCollapseExample23">Изменить категорию</a>
+              </p>
+            </div>
+            <div class="buttons__author">
+              <p>
+                <a class="btn btn-success" data-bs-toggle="collapse" href="#multiCollapseExample31" role="button" aria-expanded="false" aria-controls="multiCollapseExample31">Добавить нового автора</a>
+                <a class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample32" aria-expanded="false" aria-controls="multiCollapseExample32">Удалить автора</a> 
+                <a class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample33" aria-expanded="false" aria-controls="multiCollapseExample33">Изменить автора</a>
               </p>
             </div>
           </div>
@@ -319,6 +332,40 @@
                         <input type="number" class="input-group mb-3" name="idcategory" placeholder="Введите номер категории">
                         <input type="text"  class="input-group mb-3" name="namecategory" placeholder="Введите наименование категории">
                         <input type="submit" class="btn btn-success input-group" name="changecategory">
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row-author row">
+                <div class="col">
+                  <div class="collapse multi-collapse" id="multiCollapseExample31">
+                    <div class="card card-body">
+                      <form action="" method="POST">
+                        <input type="text" class="input-group mb-3" name="nameauthor" placeholder="Введите имя автора">
+                        <input type="submit" class="btn btn-success input-group" name="addauthor">
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="collapse multi-collapse" id="multiCollapseExample32">
+                    <div class="card card-body">
+                      <form action="" method="POST">
+                        <input type="number" class="input-group mb-3" name="idauthor" placeholder="Введите номер автора">
+                        <input type="submit" class="btn btn-success input-group" name="delauthor">
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="collapse multi-collapse" id="multiCollapseExample33">
+                    <div class="card card-body">
+                      <form action="" method="POST">
+                        <input type="number" class="input-group mb-3" name="idauthor" placeholder="Введите номер автора">
+                        <input type="text"  class="input-group mb-3" name="nameauthor" placeholder="Введите имя автора">
+                        <input type="submit" class="btn btn-success input-group" name="changeauthor">
                       </form>
                     </div>
                   </div>

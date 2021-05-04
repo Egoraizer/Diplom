@@ -1,12 +1,6 @@
 <?php session_start(); ob_start(); require_once './src/db.php'; require_once './src/functions.php'; connect_to_db(); ?>
 
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Корзина</title>
-	<link rel="stylesheet" href="/css/cart.css" class="">
-</head>
-<body>
+
 <? if ($_REQUEST['delprod']) {
 	$idproduct = $_GET['delprod'];
 	unset($_SESSION['user']['cart'][$idproduct]);
@@ -26,14 +20,16 @@
 
 <?endif;?>
 
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Корзина</title>
+	<link rel="stylesheet" href="/css/cart.css" class="">
+</head>
+<body>
+
 <? require_once './src/header.php'; ?>
-
-
-
-<? if (empty($_SESSION['user']['cart'])) : ?>
-	<div class="alert alert-warning alert-dismissible fade show" role="alert">
-		<strong>Корзина пуста.</strong>  Сперва добавьте товар в корзину и возвращайтесь!
-	</div>
+<? if (empty($_SESSION['user']['cart'])) : MessageForUser('warning','Сперва добавьте товар в корзину и возвращайтесь!');?>
 <? else :  ?>
 	<div class="cart__page">
 		<div class="cart__product">
@@ -86,7 +82,7 @@
 					<div class="order-product">Товаров: <?= $totalamount; ?> шт.</div>
 					<div class="order-price">Заказ на сумму: <?= $totalprice;?> руб.</div>
 					<?if (!isset($_SESSION['user']['login'])) :?>
-					<div class="zareg"><br>Войдите, чтобы продолжить</div>
+					<div class="order-auth"><br>Войдите, чтобы продолжить</div>
 					<?else :?>
 					<div class="order-submit">
 						<form method="POST" action="https://yoomoney.ru/quickpay/confirm.xml">    
