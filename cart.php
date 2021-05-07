@@ -35,7 +35,7 @@
 		<div class="cart__product">
 			<? $ids = array_keys($_SESSION['user']['cart']);
 	        $query_products = $conn->query("SELECT * FROM products INNER JOIN `author` ON products.author = author.idauthor WHERE idproduct IN (" . implode(',', $ids) . ") ORDER BY idproduct"); 
-	        while($row = $query_products->fetch_assoc()) : ?>
+	        while($row = $query_products->fetch_assoc()) :?>
 	        	<?
 	        	$totalamount += $_SESSION['user']['cart'][$row['idproduct']]['amount']; 
 	        	$price = $row['price'] * $_SESSION['user']['cart'][$row['idproduct']]['amount'];
@@ -55,7 +55,7 @@
 								<div class="amount-change">
 									<form method="GET">
 										<button type="submit" class="btn btn-danger" disabled>-</button>
-										<? echo $_SESSION['user']['cart'][$row['idproduct']]['amount'];?>
+										<?= $_SESSION['user']['cart'][$row['idproduct']]['amount'];?>
 										<button type="submit" name="addproduct" class="btn btn-success" value="<?= $row['idproduct']?>">+</button>	
 									</form>
 								</div>
@@ -65,7 +65,7 @@
 										<?= $_SESSION['user']['cart'][$row['idproduct']]['amount']?>
 										<button type="submit" name="addproduct" class="btn btn-success" value="<?= $row['idproduct']?>">+</button>	
 									</form>
-								
+						
 						<? endif;?>
 						</div>
 						<div class="info-price"><?= $price ?> руб.</div>
@@ -74,8 +74,9 @@
 						<form>
 							<button class="btn btn-danger" type="submit" name="delprod" value="<?= $row['idproduct']?>">Удалить</button> 
 						</form>
-					</div>
+					</div>	
 				</div>
+				<?$text = $text . $row['idproduct']. '-' .$_SESSION['user']['cart'][$row['idproduct']]['amount']. '|';?>
 			<?endwhile;?>
 			<div class="cart__order text-center">
 				<div class="order-content">
@@ -84,6 +85,7 @@
 					<?if (!isset($_SESSION['user']['login'])) :?>
 					<div class="order-auth"><br>Войдите, чтобы продолжить</div>
 					<?else :?>
+					<?##totalprice;?>
 					<div class="order-submit">
 						<form method="POST" action="https://yoomoney.ru/quickpay/confirm.xml">    
 							<input type="hidden" name="receiver" value="4100116637537324">    
@@ -91,14 +93,14 @@
 							<input type="hidden" name="short-dest" value="Проект «Железный человек»: реактор холодного ядерного синтеза">    
 							<input type="hidden" name="label" value="1">    
 							<input type="hidden" name="quickpay-form" value="donate">    
-							<input type="hidden" name="targets" value="транзакция 1">    
-							<input type="hidden" name="sum" value="<?= $totalprice?>" data-type="number">    
-							<input type="hidden" name="comment" value="Хотелось бы получить дистанционное управление.">    
+							<input type="hidden" name="targets" value="Покупка товара на сайте 'Книжный дом'">    
+							<input type="hidden" name="sum" value="<?= $totalprice;?>" data-type="number">    
+							<input type="hidden" name="comment" value="<?=$text.$totalamount?>">  
 							<input type="hidden" name="need-fio" value="true">    
 							<input type="hidden" name="need-email" value="true">    
 							<input type="hidden" name="need-phone" value="true">    
 							<input type="hidden" name="need-address" value="false"> 
-							<input type="hidden" name="successURL" value="http://diplom/index.php">     
+							<input type="hidden" name="successURL" value="http://diplom/lk.php">
 							<input type="submit" class="btn btn-success" value="Оформить заказ">
 						</form>
 					</div>

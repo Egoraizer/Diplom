@@ -14,7 +14,8 @@
         elseif ($userrpassword !== $userpassword) MessageForUser('warning', 'Пароли не совпадают.');
         else {
             $query_new_user = $conn->query("INSERT INTO `users` (`login`, `email`, `password`) VALUES ('$userlogin', '$useremail', '$userpassword')");
-
+            
+            $_SESSION['user']['iduser'] = $row['id'];
             $_SESSION['user']['login'] = $userlogin;
             $_SESSION['user']['email'] = $useremail;
             header('Location:index.php');
@@ -39,6 +40,7 @@
       while($row = $query_users->fetch_assoc()) {
         if ($userpassword == $row['password']) {
           MessageForUser('success', 'Вход выполен.');
+          $_SESSION['user']['iduser'] = $row['id'];
           $_SESSION['user']['login'] = $userlogin;
           $_SESSION['user']['email'] = $row['email'];
           header('Location: index.php');
