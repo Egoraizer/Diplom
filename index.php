@@ -225,6 +225,8 @@
       </div>
     </div>                         
   </main> 
+  
+<? require_once './src/footer.php'?>
 </body>
 </html>
 
