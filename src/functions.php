@@ -37,3 +37,11 @@
 		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 	</div>
 <? }
+
+function TicketStatus () { ?>
+	<select name="status" class="input-group mb-3">
+		<option value="Не подтвержден">Не подтвержден</option>
+		<option value="В работе">В работе</option>
+		<option value="Выполнен">Выполнен</option>
+	</select>
+<? }

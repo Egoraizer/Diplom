@@ -9,7 +9,7 @@
 
     if (isset($_SESSION['user']['cart'][$id])) :
         $_SESSION['user']['cart'][$id]['amount']++; ?>
-        <script>document.location.replace('./index.php'); </script>
+        <script>history.go(-1);</script>
 
     <? else :
         $query_products = $conn->query("SELECT * FROM products  WHERE `idproduct`={$id}");
@@ -20,11 +20,11 @@
             $_SESSION['user']['cart'][$row_s['idproduct']] = array(
                 "amount" => 1
             ); ?>
-            <script>document.location.replace('./index.php');</script>
+            <script>history.go(-1);</script>
 
         <? else : ?> 
 
-          <script>document.location.replace('./index.php');</script>
+          <script>history.go(-1);</script>
         <?endif;
       endif;
     elseif ($_REQUEST['productincart']) : ?>  

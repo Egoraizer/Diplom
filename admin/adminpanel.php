@@ -10,7 +10,7 @@
     if ($query_users->num_rows === 0) MessageForUser('warning', 'Такого пользователя не сущесвует или у вас недостаточно прав.');
     else {
       while ($row = $query_users->fetch_assoc()) {
-        if ($password == $row['password']) { $_SESSION['admin']['login'] = $login; break; }
+        if ($password == $row['password']) { $_SESSION['admin']['login'] = $login; $_SESSION['admin']['role'] = $row['role']; break; }
         elseif ($password != $row['password']) { MessageForUser('danger', 'Пароль введен не верно.'); break; } 
       }
     }	
@@ -84,7 +84,7 @@
 
       if ($query_del_category->num_rows == 0) MessageForUser('danger', 'Такой категории не существует или неправильно введен номер.');
       else {
-          $query_del_book = $conn->query("DELETE FROM `productcategory` WHERE `idcategory` = '$idcategory'");
+          $query_del_category = $conn->query("DELETE FROM `productcategory` WHERE `idcategory` = '$idcategory'");
           MessageForUser('success', 'Категория с номером <strong>'.$idcategory.'</strong> успешно удалена!'); 
       }
   }
@@ -119,7 +119,7 @@
 
       if ($query_del_author->num_rows == 0) MessageForUser('danger', 'Такого автора не существует или неправильно введен номер.');
       else {
-          $query_del_book = $conn->query("DELETE FROM `author` WHERE `idauthor` = '$idauthor'");
+          $query_del_author= $conn->query("DELETE FROM `author` WHERE `idauthor` = '$idauthor'");
           MessageForUser('success', 'Автор с номером <strong>'.$idauthor.'</strong> успешно удален!'); 
       }
   }
@@ -135,6 +135,85 @@
     MessageForUser('success', 'Автор с номером <strong>'.$idauthor.'</strong> успешно изменен!');
   }
 ?>
+
+<? 
+  if ($_POST['addticket']) {
+    $iduser = trim(HtmlSpecialChars(strip_tags($_POST['iduser']))); 
+    $status = trim(HtmlSpecialChars(strip_tags($_POST['status']))); 
+    
+    $query_add_ticket = $conn->query("INSERT INTO `tickets` (`iduser`, `status`) VALUES ('$iduser', '$status')");
+    
+    MessageForUser('success', 'Новый заказ был успешно добавлен!');
+  }
+?>
+
+<? 
+  if ($_POST['changeticket']) {
+    $idticket = trim(HtmlSpecialChars(strip_tags($_POST['idticket']))); 
+    $iduser = trim(HtmlSpecialChars(strip_tags($_POST['iduser']))); 
+    $status = trim(HtmlSpecialChars(strip_tags($_POST['status'])));  
+
+    $query_change_author = $conn->query("UPDATE `tickets` SET `iduser` = '$iduser', `status` = '$status' WHERE `idticket` = '$idticket'");
+
+    MessageForUser('success', 'Заказ с номером <strong>'.$idticket.'</strong> успешно изменен!');
+  }
+?>
+
+<? 
+  if ($_POST['delticket']) {
+    $idticket = trim(HtmlSpecialChars(strip_tags($_POST['idticket'])));
+    
+    $query_del_ticket = $conn->query("SELECT * FROM `tickets` WHERE `idticket` = '$idticket'");
+
+      if ($query_del_ticket->num_rows == 0) MessageForUser('danger', 'Такого заказа не существует или неправильно введен номер.');
+      else {
+          $query_del_ticket = $conn->query("DELETE FROM `tickets` WHERE `idticket` = '$idticket'");
+          MessageForUser('success', 'Заказ с номером <strong>'.$idticket.'</strong> успешно удален!'); 
+      }
+  }
+?>
+
+
+
+<?
+  if ($_POST['addticketlist']) {
+    $idticket = trim(HtmlSpecialChars(strip_tags($_POST['idticket']))); 
+    $idproduct = trim(HtmlSpecialChars(strip_tags($_POST['idproduct']))); 
+    $status = trim(HtmlSpecialChars(strip_tags($_POST['status']))); 
+    
+    $query_add_ticketlist = $conn->query("INSERT INTO `ticketslist` (`idticket`, `idproduct`, `status`) VALUES ('$idticket', '$idproduct', '$status')");
+    
+    MessageForUser('success', 'Новый список заказов был успешно добавлен!');
+  }
+?>
+
+<? 
+  if ($_POST['changeticketlist']) {
+    $idticketlist = trim(HtmlSpecialChars(strip_tags($_POST['idticketlist']))); 
+    $idticket = trim(HtmlSpecialChars(strip_tags($_POST['idticket']))); 
+    $idproduct = trim(HtmlSpecialChars(strip_tags($_POST['idproduct']))); 
+    $status = trim(HtmlSpecialChars(strip_tags($_POST['status'])));  
+
+    $query_change_ticketlist = $conn->query("UPDATE `ticketslist` SET `idticket` = '$idticket', `idproduct` = '$idproduct', `status` = '$status' WHERE `idticketlist` = '$idticketlist'");
+
+    MessageForUser('success', 'Лист заказа с номером <strong>'.$idticketlist.'</strong> успешно изменен!');
+  }
+?>
+
+<? 
+  if ($_POST['delticketlist']) {
+    $idticketlist = trim(HtmlSpecialChars(strip_tags($_POST['idticketlist'])));
+    
+    $query_del_ticketlist = $conn->query("SELECT * FROM `ticketslist` WHERE `idticketlist` = '$idticketlist'");
+
+      if ($query_del_ticketlist->num_rows == 0) MessageForUser('danger', 'Такого листа заказа не существует или неправильно введен номер.');
+      else {
+          $query_del_ticketlist = $conn->query("DELETE FROM `ticketslist` WHERE `idticketlist` = '$idticketlist'");
+          MessageForUser('success', 'Лист заказа с номером <strong>'.$idticketlist.'</strong> успешно удален!'); 
+      }
+  }
+?>
+
 
 
 <!DOCTYPE html>
@@ -161,7 +240,7 @@
       <div class="main row">
         <div class="main__info col">
           <? $query_tables = $conn->query("SHOW TABLES FROM `bookhouse`"); ?>
-            <div class="info__tables">В базе данных bookhouse - <?= mysqli_num_rows($query_tables);?> таблицы</div>
+            <div class="info__tables">В базе данных bookhouse - <?= mysqli_num_rows($query_tables);?> таблиц</div>
           <? while ($row = $query_tables->fetch_array()) : ?>
             Таблица: <a href='?id_table=<?=$row[0]?>'><?=$row[0]?></a><br>
           <? endwhile; ?>
@@ -189,6 +268,17 @@
                   <th>email</th>
                   <th>password</th>
                   <th>role</th>
+                  <th>createdate</th>
+                <?elseif ($_GET['id_table'] == 'tickets') :?>
+                  <th>idticket</th>
+                  <th>iduser</th>
+                  <th>status</th>
+                  <th>createdate</th>
+                <?elseif ($_GET['id_table'] == 'ticketslist') :?>
+                  <th>idticketlist</th>
+                  <th>idticket</th>
+                  <th>idproduct</th>
+                  <th>status</th>
                 <?endif;?>
               </thead>
               <tbody>
@@ -227,8 +317,35 @@
                 <a class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample33" aria-expanded="false" aria-controls="multiCollapseExample33">Изменить автора</a>
               </p>
             </div>
+            <div class="buttons__tickets">
+              <p>
+                <a class="btn btn-success" data-bs-toggle="collapse" href="#multiCollapseExample41" role="button" aria-expanded="false" aria-controls="multiCollapseExample41">Создать заказ</a>
+                <a class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample42" aria-expanded="false" aria-controls="multiCollapseExample42">Изменить статус заказа</a>
+                <?if ($_SESSION['admin']['role'] == 'admin'):?>
+                  <a class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample43" aria-expanded="false" aria-controls="multiCollapseExample43">Удалить заказ</a>
+                <?else :?>
+                  <a class="btn btn-danger disabled" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample43" aria-expanded="false" aria-controls="multiCollapseExample43" >Удалить заказ</a>
+                <?endif;?>
+              </p>
+            </div>
+            <div class="buttons__ticketlist">
+              <p>
+                <a class="btn btn-success" data-bs-toggle="collapse" href="#multiCollapseExample51" role="button" aria-expanded="false" aria-controls="multiCollapseExample51">Создать список заказа</a>
+                <a class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample52" aria-expanded="false" aria-controls="multiCollapseExample52">Изменить список заказа</a> 
+                <?if ($_SESSION['admin']['role'] == 'admin'):?>
+                  <a class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample53" aria-expanded="false" aria-controls="multiCollapseExample53">Удалить список заказа</a>
+                <?else :?>
+                  <a class="btn btn-danger disabled" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample53" aria-expanded="false" aria-controls="multiCollapseExample53">Удалить список заказа</a>
+                <?endif;?>
+              </p>
+            </div>
+            <div class="buttons__statistics">
+              <p>
+                <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample61" role="button" aria-expanded="false" aria-controls="multiCollapseExample61">Статистика</a>
+              </p>
+            </div>
           </div>
-        <div class="row-book row">
+            <div class="row-book row">
             <div class="col">
               <div class="collapse multi-collapse" id="multiCollapseExample11">
                 <div class="card card-body">
@@ -367,6 +484,177 @@
                         <input type="text"  class="input-group mb-3" name="nameauthor" placeholder="Введите имя автора">
                         <input type="submit" class="btn btn-success input-group" name="changeauthor">
                       </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row-tickets row">
+                <div class="col">
+                  <div class="collapse multi-collapse" id="multiCollapseExample41">
+                    <div class="card card-body">
+                        <form action="" method="POST">
+                          <select name="iduser" class="input-group mb-3">
+                            <?$query_users = $conn->query("SELECT * FROM `users`");
+                            while ($row = $query_users->fetch_assoc()) :?>
+                              <option value="<?= $row['iduser']?>">
+                                <?= $row['login']?>    
+                              </option>
+                            <?endwhile;?>
+                          </select>
+                          <?TicketStatus();?>
+                          <input type="submit" class="btn btn-success input-group" name="addticket">
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="collapse multi-collapse" id="multiCollapseExample42">
+                    <div class="card card-body">
+                      <form action="" method="POST">
+                        <input type="number" class="input-group mb-3" name="idticket" placeholder="Введите номер заказа">
+                        <select name="iduser" class="input-group mb-3">
+                          <?$query_users = $conn->query("SELECT * FROM users");
+                          while ($row = $query_users->fetch_assoc()) :?>
+                            <option value="<?= $row['iduser']?>">
+                              <?= $row['login']?>    
+                            </option>
+                          <?endwhile;?>
+                        </select>
+                        <?TicketStatus();?>
+                        <input type="submit" class="btn btn-success input-group" name="changeticket">
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <?if ($_SESSION['admin']['role'] == 'admin'):?>
+                  <div class="col">
+                    <div class="collapse multi-collapse" id="multiCollapseExample43">
+                      <div class="card card-body">
+                        <form action="" method="POST">
+                          <input type="number" class="input-group mb-3" name="idticket" placeholder="Введите номер заказа">
+                          <input type="submit" class="btn btn-success input-group" name="delticket">
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                <?endif;?>
+              </div>
+              <div class="row-ticketslist row">
+                <div class="col">
+                  <div class="collapse multi-collapse" id="multiCollapseExample51">
+                    <div class="card card-body">
+                      <form action="" method="POST">
+                          <select name="idticket" class="input-group mb-3">
+                            <?$query_tickets = $conn->query("SELECT * FROM `tickets`");
+                            while ($row = $query_tickets->fetch_assoc()) :?>
+                              <option value="<?= $row['idticket']?>">
+                                <?= $row['idticket']?>    
+                              </option>
+                            <?endwhile;?>
+                          </select>
+                          <select name="idproduct" class="input-group mb-3">
+                            <?$query_products = $conn->query("SELECT * FROM `products`");
+                            while ($row = $query_products->fetch_assoc()) :?>
+                              <option value="<?= $row['idproduct']?>">
+                                <?= $row['title']?>    
+                              </option>
+                            <?endwhile;?>
+                          </select>
+                          <?TicketStatus();?>
+                          <input type="submit" class="btn btn-success input-group" name="addticketlist">
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="collapse multi-collapse" id="multiCollapseExample52">
+                    <div class="card card-body">
+                      <form action="" method="POST">
+                          <input type="number" class="input-group mb-3" name="idticketlist" placeholder="Введите номер листа заказа">
+                          <select name="idticket" class="input-group mb-3">
+                            <?$query_tickets = $conn->query("SELECT * FROM `tickets`");
+                            while ($row = $query_tickets->fetch_assoc()) :?>
+                              <option value="<?= $row['idticket']?>">
+                                <?= $row['idticket']?>    
+                              </option>
+                            <?endwhile;?>
+                          </select>
+                          <select name="idproduct" class="input-group mb-3">
+                            <?$query_products = $conn->query("SELECT * FROM `products`");
+                            while ($row = $query_products->fetch_assoc()) :?>
+                              <option value="<?= $row['idproduct']?>">
+                                <?= $row['title']?>    
+                              </option>
+                            <?endwhile;?>
+                          </select>
+                          <?TicketStatus();?>
+                          <input type="submit" class="btn btn-success input-group" name="changeticketlist">
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <?if ($_SESSION['admin']['role'] == 'admin'):?>
+                  <div class="col">
+                    <div class="collapse multi-collapse" id="multiCollapseExample53">
+                      <div class="card card-body">
+                        <form action="" method="POST">
+                          <input type="number" class="input-group mb-3" name="idticketlist" placeholder="Введите номер листа заказа">
+                          <input type="submit" class="btn btn-success input-group" name="delticketlist">
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                <?endif;?>
+              </div>
+              <div class="row-statistics row">
+                <div class="col">
+                  <div class="collapse multi-collapse" id="multiCollapseExample61">
+                  <?echo date( "Сегодня d.m.y. Время: H:i" );?>
+                    <div class="card card-body">
+                      <?
+                        $query_today_tickets = $conn->query("SELECT * FROM tickets WHERE DAY(createdate) = DAY(NOW())");
+                        $ticketSuccess = 0; $ticketWork = 0; $ticketProcessing = 0;
+                        
+                        if ($query_today_tickets->num_rows == 0): ?> 
+                          <div class="info-tickets">
+                            Заказов на сегодня нет.
+                          </div>
+                        <? else : ?>
+                          <div class="info-tickets">
+                            <div class="tickets-count">Заказов произведено на сегодня - <strong><?= $query_today_tickets->num_rows?></strong>, из которых:</div>
+                              <div class="tickets-status">
+                                <?while($counter = $query_today_tickets->fetch_array()) {
+                                  if ($counter['status'] == 'Выполнен') $ticketSuccess++;
+                                  elseif ($counter['status'] == 'В работе') $ticketWork++;
+                                  elseif ($counter['status'] == 'Не подтвержден') $ticketProcessing++;
+                                } ?>
+                                <strong><?= $ticketSuccess?></strong> выполнено; <br>
+                                <strong><?= $ticketWork?></strong> в работе; <br>
+                                <strong><?= $ticketProcessing?></strong> не подтверждены; <br>
+                              </div>
+                          </div>
+                        <?endif;?>
+                        <?$query_new_users = $conn->query("SELECT * FROM users WHERE TO_DAYS(NOW()) - TO_DAYS(createdate) <= 30;");
+                        $roleUser = 0; $roleAdmin = 0; $roleModerator = 0;
+                        if ($query_new_users->num_rows == 0): ?>
+                          <div class="info-users">
+                            Новых пользователей за прошедшей месяц нет.
+                          </div>
+                        <?else :?>
+                          <div class="info-users">
+                            <div class="users-count"> Новых пользователей за прошедший месяц - <strong><?= $query_new_users->num_rows?></strong>, из которых:</div>
+                              <div class="tickets-role">
+                                <?while($counter = $query_new_users->fetch_array()) {
+                                  if ($counter['role'] == 'user') $roleUser++;
+                                  elseif ($counter['role'] == 'admin') $roleAdmin++;
+                                  elseif ($counter['role'] == 'moderator') $roleModerator++;
+                                } ?>
+                                <strong><?= $roleUser?></strong> пользователей; <br>
+                                <strong><?= $roleAdmin?></strong> администраторов; <br>
+                                <strong><?= $roleModerator?></strong> модераторов; <br>
+                              </div>
+                          </div>
+                        <?endif;?>
                     </div>
                   </div>
                 </div>
