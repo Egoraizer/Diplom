@@ -239,8 +239,8 @@
     <? else: ?>
       <div class="main row">
         <div class="main__info col">
-          <? $query_tables = $conn->query("SHOW TABLES FROM `bookhouse`"); ?>
-            <div class="info__tables">В базе данных bookhouse - <?= mysqli_num_rows($query_tables);?> таблиц</div>
+          <? $query_tables = $conn->query("SHOW TABLES FROM `heroku_93c2aefea11c45b`"); ?>
+            <div class="info__tables">В базе данных heroku_93c2aefea11c45b - <?= mysqli_num_rows($query_tables);?> таблиц</div>
           <? while ($row = $query_tables->fetch_array()) : ?>
             Таблица: <a href='?id_table=<?=$row[0]?>'><?=$row[0]?></a><br>
           <? endwhile; ?>
