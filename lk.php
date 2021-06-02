@@ -1,5 +1,19 @@
 <?php session_start(); ob_start(); require_once './src/db.php'; require_once './src/functions.php'; connect_to_db(); 
 	if (!isset($_SESSION['user']['login'])) header('Location: index.php'); ?>
+
+    
+<?if ($_REQUEST['userrequest']) {
+    $usertext = $_POST['usertext'];
+    $usermail = $_SESSION['user']['email'];
+    $username = $_SESSION['user']['login'];
+    if (empty($usertext)) MessageForUser('warning', 'Заполните все поля.');
+    elseif (empty($_SESSION['user']['login']) || empty($_SESSION['user']['email'])) MessageForUser('warning', 'Вы вышли из аккаунта. Пожалуйста, перезайдите вновь для того что бы отправить сообщение.');
+    elseif (strlen($usertext) > 255 || strlen($usertext) < 3) MessageForUser('warning', 'Не все условия соблюдены. Напишите текст от 3 до 255 символов.');
+    else {
+        $query_insert_request = $conn->query("INSERT INTO `requests` (`username`, `usertext`, `usermail`) VALUES ('$username', '$usertext', '$usermail')");
+        MessageForUser('success', 'Вопрос успешно отправлен. Вам ответят через некоторое время.');
+    }
+} ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -88,6 +102,13 @@
                     <?endwhile;?>
                     </div>
                 <?endif;?>
+            </div>
+            <div class="user-request">
+                <p>Оставьте свой вопрос или пожелания!</p>
+                <form action="" method="POST">
+                    <textarea class="input-group mb-3" type="text" name="usertext" placeholder="Ваше сообщение (не более 255 символов)"rows="5" cols="45"></textarea>
+                    <input class="btn btn-dark input-group" type="submit" name="userrequest">
+                </form>
             </div>
         </div>
         

@@ -29,7 +29,7 @@
 <body>
 
 <? require_once './src/header.php'; ?>
-<? if (empty($_SESSION['user']['cart'])) : MessageForUser('warning','Сперва добавьте товар в корзину и возвращайтесь!');?>
+<? if (empty($_SESSION['user']['cart'])) : MessageForUser('warning','Корзина пуста. Воспользуйтесь поиском, чтобы найти все что нужно.');?>
 <? else :  ?>
 	<div class="cart__page">
 		<div class="cart__product">
@@ -41,14 +41,16 @@
 	        	$price = $row['price'] * $_SESSION['user']['cart'][$row['idproduct']]['amount'];
 	        	$totalprice += $price;?>
 				<div class="product__content row">
-					<div class="product__image col text-center">
-						<img src="<?= $row['image'] ?>" height="200px" width="130px">
+
+					<div class="card-img-top mb-2 product__image col text-center">
+						<a href="show.php?productid=<?= $row['idproduct']?>"><img src="<?= $row['image'] ?>" height="200px" width="130px"></a>
 					</div>
+
 					<div class="product__body col">
 						<div class="product-title"><?= $row['title']?></div>
 						<div class="product-author"><?= $row['nameauthor']?></div>
-						
 					</div>
+					
 					<div class="product-info col">
 						<div class="info-amount">
 							<? if ($_SESSION['user']['cart'][$row['idproduct']]['amount'] == 1 ) : ?>

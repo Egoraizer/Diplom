@@ -2,21 +2,22 @@
     background-color: #4d4d4d;
     color: white;
     margin-top: 75px; 
-
 }
 
 .about {
     padding-top: 50px;
     padding-bottom: 40px;
     margin-right: 15px;
-  
+    align-items: center;
 }
 
 .about-map {
     margin-left: 50px;
 }
+.products__cards {
+    margin-right: 0px;
+}
 .about-us {
-    width: 100%;
     margin-left: 50px;
 }
 .about-us-quotes {
@@ -29,4 +30,52 @@
 .blockquote-footer {
     font-size: 15px;
     color: white;
+}
+
+
+@media only screen and (max-width: 1480px) {
+    .about {
+       flex-direction: column;
+    }
+    .about-us {
+        margin-left: 0px;
+        font-size: 14px;
+    }
+    .blockquote, .blockquote-footer {
+        display: none;
+    }
+    .about-map {
+        margin-left: 0px;
+    }
+}
+
+
+@media only screen and (max-width: 1200px) {
+    .about {
+       flex-direction: column;
+       margin-bottom: 0px;
+    }   
+    .about-us-name {
+        align-items: center;
+    }
+    .about-us { 
+        font-size: 12px;
+    }
+}
+
+
+@media only screen and (max-width: 1050px) {
+    .about{
+       flex-direction: column;
+    }
+    .about-us-name {
+        align-items: center;
+    }
+    .about-us { 
+
+        font-size: 12px;
+    }
+    .blockquote, .blockquote-footer {
+        font-size: 15px;
+    }
 }

@@ -5,16 +5,13 @@
 .header__container {
     background-color: white;
     margin-top: 20px;
-
 }
 
 .header__content {
     margin-left: 15px;
-    margin-right: 15px;
     margin-bottom: 10px;
     display: flex;
 }
-
 
 .header__search {
     align-items: center;
@@ -25,9 +22,14 @@
     display: flex;
 }
 
+.search__input {
+    width: 500px !important;
+}
+
 .search__text input {
     width: 500px;
 }
+
 .header__personal {
     margin-top: 15px;
     display: flex;
@@ -36,6 +38,19 @@
 .header__cart, .header__lk {
     margin-right: 50px;
 }
+
+.header__cart, .header__lk {
+    margin-right: 35px;
+    margin-bottom: 10px;
+}
+
+
+
+.logo__icon img {
+    height: 100px;
+    width: 285px;
+}
+
 .cart__logo, .lk__logo {
      margin: 0 auto;
      display: block;
@@ -44,4 +59,26 @@
 .line {
     box-shadow: 0 0 10px black; 
     padding-bottom: 1px;
+}
+
+@media only screen and (max-width: 1300px) {
+    .search__input {
+        width: 450px !important;
+    }
+    .lk__info, .cart__info {
+        display: none;
+    }
+
+}
+
+@media only screen and (max-width: 1200px) {
+    .search__input {
+        width: 425px !important;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+    .search__input {
+        width: 375px !important;
+    }
 }

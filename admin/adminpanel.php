@@ -4,8 +4,9 @@
   if ($_POST['adminlog']) {
     $login = trim(HtmlSpecialChars(strip_tags($_POST['login'])));
     $password = trim(HtmlSpecialChars(strip_tags($_POST['password'])));
+    $password = md5($password);
 
-    $query_users = $conn->query("SELECT * FROM `users` WHERE `login`= '$login' AND (`role` = 'moderator' or `role` = 'admin')");
+    $query_users = $conn->query("SELECT * FROM `users` WHERE `login`= '$login' AND `role` = 'admin'");
 
     if ($query_users->num_rows === 0) MessageForUser('warning', 'Такого пользователя не сущесвует или у вас недостаточно прав.');
     else {
@@ -140,8 +141,8 @@
   if ($_POST['addticket']) {
     $iduser = trim(HtmlSpecialChars(strip_tags($_POST['iduser']))); 
     $status = trim(HtmlSpecialChars(strip_tags($_POST['status']))); 
-    
-    $query_add_ticket = $conn->query("INSERT INTO `tickets` (`iduser`, `status`) VALUES ('$iduser', '$status')");
+    $currentdate = date('Y-m-d');
+    $query_add_ticket = $conn->query("INSERT INTO `tickets` (`iduser`, `status`, `createdate`) VALUES ('$iduser', '$status', '$currentdate')");
     
     MessageForUser('success', 'Новый заказ был успешно добавлен!');
   }
@@ -214,7 +215,34 @@
   }
 ?>
 
+<? 
+  if ($_POST['delrequest']) {
+    $idrequest = trim(HtmlSpecialChars(strip_tags($_POST['idrequest'])));
+    
+    $query_del_request = $conn->query("SELECT * FROM `requests` WHERE `idrequest` = '$idrequest'");
 
+      if ($query_del_request->num_rows == 0) MessageForUser('danger', 'Такого запроса не существует или неправильно введен номер.');
+      else {
+          $query_del_request = $conn->query("DELETE FROM `requests` WHERE `idrequest` = '$idrequest'");
+          MessageForUser('success', 'Запрос с номером <strong>'.$idrequest.'</strong> успешно удален!'); 
+      }
+  }
+?>
+
+<?if ($_POST['banunbanuser']) {
+  $iduser = trim(HtmlSpecialChars(strip_tags($_POST['iduser'])));
+
+  $query_users = $conn->query("SELECT * FROM users WHERE `iduser` = '$iduser'");
+  if ($query_users->num_rows == 0) MessageForUser('danger', 'Такого запроса не существует или неправильно введен номер.');
+  else {
+    while ($row = $query_users->fetch_array()) {
+      if ($row['ban'] == 0){ $ban = 1; MessageForUser('success', 'Пользователя с id - '.$id.'успешно заблокирован!'); break;}
+      elseif ($row['ban'] == 1){ $ban = 0; MessageForUser('success', 'Пользователь с id - '.$id. ' успешно разблокирован!'); break;}
+    }
+    $query_banorunban_user = $conn->query("UPDATE users SET `ban` = '$ban' WHERE `iduser` = '$iduser'");
+  }
+
+}?>
 
 <!DOCTYPE html>
 <html>
@@ -223,6 +251,7 @@
   <link rel="stylesheet" type="text/css" href="/css/adminpanel.css">
   <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
   <script src="/bootstrap/js/bootstrap.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 
 <body>
@@ -239,7 +268,7 @@
     <? else: ?>
       <div class="main row">
         <div class="main__info col">
-          <? $query_tables = $conn->query("SHOW TABLES FROM `heroku_93c2aefea11c45b`"); ?>
+          <? $query_tables = $conn->query("SHOW TABLES FROM `heroku_93c2aefea11c45b`"); ?>  
             <div class="info__tables">В базе данных heroku_93c2aefea11c45b - <?= mysqli_num_rows($query_tables);?> таблиц</div>
           <? while ($row = $query_tables->fetch_array()) : ?>
             Таблица: <a href='?id_table=<?=$row[0]?>'><?=$row[0]?></a><br>
@@ -261,13 +290,13 @@
                   <th>category</th>
                   <th>price</th>
                   <th>image</th>
-                  <th>rating</th>
                 <?elseif ($_GET['id_table'] == 'users') :?>
                   <th>iduser</th>
                   <th>login</th>
                   <th>email</th>
                   <th>password</th>
                   <th>role</th>
+                  <th>ban</th>
                   <th>createdate</th>
                 <?elseif ($_GET['id_table'] == 'tickets') :?>
                   <th>idticket</th>
@@ -279,6 +308,11 @@
                   <th>idticket</th>
                   <th>idproduct</th>
                   <th>status</th>
+                <?elseif ($_GET['id_table'] == 'requests') :?>
+                  <th>idrequest</th>
+                  <th>username</th>
+                  <th>usertext</th>
+                  <th>usermail</th>
                 <?endif;?>
               </thead>
               <tbody>
@@ -339,11 +373,16 @@
                 <?endif;?>
               </p>
             </div>
-            <div class="buttons__statistics">
+            <div class = "buttons__requests">
               <p>
-                <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample61" role="button" aria-expanded="false" aria-controls="multiCollapseExample61">Статистика</a>
+                <a class="btn btn-success" data-bs-toggle="collapse" href="#multiCollapseExample71" role="button" aria-expanded="false" aria-controls="multiCollapseExample71">Удалить запрос</a>
               </p>
             </div>
+            <div class = "buttons__users">
+              <p>
+                <a class="btn btn-danger" data-bs-toggle="collapse" href="#multiCollapseExample81" role="button" aria-expanded="false" aria-controls="multiCollapseExample81">Забанить/разбанить пользователя</a>
+              </p>
+                </div>
           </div>
             <div class="row-book row">
             <div class="col">
@@ -606,55 +645,30 @@
                   </div>
                 <?endif;?>
               </div>
-              <div class="row-statistics row">
+              <?$query_today_tickets = $conn->query("SELECT * FROM tickets WHERE DAY(createdate) = DAY(NOW())"); ?>
+              <?$query_new_users = $conn->query("SELECT * FROM users WHERE TO_DAYS(NOW()) - TO_DAYS(createdate) <= 30");?>
+              <?$query_banned_users = $conn->query("SELECT * FROM users WHERE TO_DAYS(NOW()) - TO_DAYS(createdate) <= 30 AND `ban` = '1'");?>
+              <div id="columnchart_values"></div>
+              <div class="row-requests row">
                 <div class="col">
-                  <div class="collapse multi-collapse" id="multiCollapseExample61">
-                  <?echo date( "Сегодня d.m.y. Время: H:i" );?>
+                  <div class="collapse multi-collapse" id="multiCollapseExample71">
                     <div class="card card-body">
-                      <?
-                        $query_today_tickets = $conn->query("SELECT * FROM tickets WHERE DAY(createdate) = DAY(NOW())");
-                        $ticketSuccess = 0; $ticketWork = 0; $ticketProcessing = 0;
-                        
-                        if ($query_today_tickets->num_rows == 0): ?> 
-                          <div class="info-tickets">
-                            Заказов на сегодня нет.
-                          </div>
-                        <? else : ?>
-                          <div class="info-tickets">
-                            <div class="tickets-count">Заказов произведено на сегодня - <strong><?= $query_today_tickets->num_rows?></strong>, из которых:</div>
-                              <div class="tickets-status">
-                                <?while($counter = $query_today_tickets->fetch_array()) {
-                                  if ($counter['status'] == 'Выполнен') $ticketSuccess++;
-                                  elseif ($counter['status'] == 'В работе') $ticketWork++;
-                                  elseif ($counter['status'] == 'Не подтвержден') $ticketProcessing++;
-                                } ?>
-                                <strong><?= $ticketSuccess?></strong> выполнено; <br>
-                                <strong><?= $ticketWork?></strong> в работе; <br>
-                                <strong><?= $ticketProcessing?></strong> не подтверждены; <br>
-                              </div>
-                          </div>
-                        <?endif;?>
-                        <?$query_new_users = $conn->query("SELECT * FROM users WHERE TO_DAYS(NOW()) - TO_DAYS(createdate) <= 30;");
-                        $roleUser = 0; $roleAdmin = 0; $roleModerator = 0;
-                        if ($query_new_users->num_rows == 0): ?>
-                          <div class="info-users">
-                            Новых пользователей за прошедшей месяц нет.
-                          </div>
-                        <?else :?>
-                          <div class="info-users">
-                            <div class="users-count"> Новых пользователей за прошедший месяц - <strong><?= $query_new_users->num_rows?></strong>, из которых:</div>
-                              <div class="tickets-role">
-                                <?while($counter = $query_new_users->fetch_array()) {
-                                  if ($counter['role'] == 'user') $roleUser++;
-                                  elseif ($counter['role'] == 'admin') $roleAdmin++;
-                                  elseif ($counter['role'] == 'moderator') $roleModerator++;
-                                } ?>
-                                <strong><?= $roleUser?></strong> пользователей; <br>
-                                <strong><?= $roleAdmin?></strong> администраторов; <br>
-                                <strong><?= $roleModerator?></strong> модераторов; <br>
-                              </div>
-                          </div>
-                        <?endif;?>
+                      <form action="" method="POST">
+                        <input type="number" class="input-group mb-3" name="idrequest" placeholder="Введите номер запроса">
+                        <input type="submit" class="btn btn-success input-group" name="delrequest">
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row-users row">
+                <div class="col">
+                  <div class="collapse multi-collapse" id="multiCollapseExample81">
+                    <div class="card card-body">
+                      <form action="" method="POST">
+                        <input type="number" class="input-group mb-3" name="iduser" placeholder="Введите id пользователя">
+                        <input type="submit" class="btn btn-success input-group" name="banunbanuser">
+                      </form>
                     </div>
                   </div>
                 </div>
@@ -662,6 +676,40 @@
           </div>
       </div>            
   <?endif;?>
-</main> 
+</main>
+
+<script type="text/javascript">
+    google.charts.load("current", {packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+        ["Element", "Количество", { role: "style" } ],
+        ["Новые заказы на сегодня", <?= $query_today_tickets->num_rows?>, "blue"],
+        ["Закрытые заказы за последние 30 дней", 3, "green"],
+        ["Новые пользователи за последние 30 дней", <?= $query_new_users->num_rows?>, "blue"],
+        ["Забанненых пользователей за последние 30 дней", <?= $query_banned_users->num_rows?>, "red"]
+
+      ]);
+
+      var view = new google.visualization.DataView(data);
+      view.setColumns([0, 1,
+                       { calc: "stringify",
+                         sourceColumn: 1,
+                         type: "string",
+                         role: "annotation" },
+                       2]);
+
+      var options = {
+        title: "Статистика на <?=date("d-m-Y H:m" );?>",
+        width: 750,
+        height: 500,
+        bar: {groupWidth: "95%"},
+        legend: { position: "fixed" },
+      };
+      var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
+      chart.draw(view, options);
+  }
+  </script>
 </body>
 </html>
+

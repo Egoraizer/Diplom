@@ -7,3 +7,11 @@
 .ticket-check {
     margin-bottom: 5px;
 }
+
+.user-request {
+	background-color: rgb(124, 139, 141); 	
+	padding: 20px;	
+	position: fixed;
+	bottom: 30px;
+	right: 15px;
+}

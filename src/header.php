@@ -6,6 +6,8 @@
       $useremail = trim(HtmlSpecialChars(strip_tags($_POST['useremail'])));
       $userpassword = trim(HtmlSpecialChars(strip_tags($_POST['userpassword'])));
       $userrpassword = trim(HtmlSpecialChars(strip_tags($_POST['userrpassword'])));
+      $userpassword = md5($userpassword);
+      $userrpassword = md5($userrpassword);
 
 		  $query_users = $conn->query("SELECT `login`, `email` FROM `users` WHERE `login` = '$userlogin' OR `email` = '$useremail'");
       
@@ -13,12 +15,13 @@
         if (strlen($userlogin) > 50 || strlen($useremail) > 50) MessageForUser('warning', 'Логин или почта слишком длинные. Напишите логин и почту менее 50 символов.');
         elseif ($userrpassword !== $userpassword) MessageForUser('warning', 'Пароли не совпадают.');
         else {
-            $query_new_user = $conn->query("INSERT INTO `users` (`login`, `email`, `password`) VALUES ('$userlogin', '$useremail', '$userpassword')");
+            $currentdate = date('Y-m-d');
+            $query_new_user = $conn->query("INSERT INTO `users` (`login`, `email`, `password`, `createdate`) VALUES ('$userlogin', '$useremail', '$userpassword','$currentdate')");
             
             $_SESSION['user']['iduser'] = $row['id'];
             $_SESSION['user']['login'] = $userlogin;
             $_SESSION['user']['email'] = $useremail;
-            header('Location:index.php');
+            header('Location:lk.php');
             ob_end_flush();
             exit();
         }
@@ -32,13 +35,23 @@
   if ($_REQUEST['enter']) {
     $userlogin = trim(HtmlSpecialChars(strip_tags($_POST['userlogin'])));
     $userpassword = trim(HtmlSpecialChars(strip_tags($_POST['userpassword'])));
+    $userpassword = md5($userpassword);
 
     $query_users = $conn->query("SELECT * FROM `users` WHERE `login`= '$userlogin'");
 
     if ($query_users->num_rows === 0) MessageForUser('warning', 'Такого пользователя не существует.');
     else {
       while($row = $query_users->fetch_assoc()) {
-        if ($userpassword == $row['password']) {
+
+        if ($userpassword != $row['password']) {
+          MessageForUser('danger','Пароль введен не верно.');
+          break;
+        } 
+        elseif ($row['ban'] == 1) {
+          MessageForUser('danger', 'Вы были заблокированы. За подробностями обратитесь на почту <strong>kkep2201@gmail.com</strong>');
+          break;
+        }
+        elseif ($userpassword == $row['password']) {
           MessageForUser('success', 'Вход выполен.');
           $_SESSION['user']['iduser'] = $row['id'];
           $_SESSION['user']['login'] = $userlogin;
@@ -46,10 +59,7 @@
           header('Location: index.php');
           break;
         }
-        elseif ($userpassword != $row['password']) {
-          MessageForUser('danger','Пароль введен не верно.');
-          break;
-        } 
+
       }	
     }
   }
@@ -84,8 +94,8 @@
             <div class="header__search">
               <div class="search__content">
                 <form action="/index.php" method="GET">
-                     <div class="input-group" style="width:500px">
-                          <input type="text input-group" class="form-control" placeholder="Поиск книги..." name="q">
+                     <div class="search__input input-group">
+                          <input type="input-group" class="form-control" placeholder="Поиск книги..." name="q">
                           <button class="btn btn-danger" type="submit"><img src="/img/1.png" alt="" width="35px" height="35px"></button>
                       </div>
                 </form>
@@ -112,7 +122,7 @@
                     <? else: ?>
                         <div class="lk__info"><?= $_SESSION['user']['login'] ;?></div>
                         <a href="/lk.php"><img src="/img/doorway.png" alt="" class="lk__logo"></a>
-                        <a class="btn btn-danger" href="/src/logout.php">Выход</a>  
+                        <a class="btn btn-danger" href="/src/logout.php">Выход</a> <br> 
                     <?endif;?>
                 </div>
             </div>

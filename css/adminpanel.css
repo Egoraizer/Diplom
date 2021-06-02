@@ -13,3 +13,8 @@ input {
     border: 1px solid black !important;
     padding: 5px;
 }
+
+.static {
+    height: 500px;
+   width: 500px;
+}

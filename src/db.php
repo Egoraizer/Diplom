@@ -11,7 +11,6 @@
 			$active_group = 'default';
 			$query_builder = TRUE;
 			// Connect to DB
-			global $con;;
 			$conn = mysqli_connect($cleardb_server, $cleardb_username, $cleardb_password, $cleardb_db);
 			$conn->query("SET NAMES utf8");
  		}
